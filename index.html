@@ -1,48 +1,9 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr" data-theme="dark">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Security+ PBQ — Final Exam</title>
+<title>Security+ PBQ — Lesson 1</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root[data-theme="dark"] {
@@ -50,19 +11,16 @@
   --text:#f5f5f7; --text-dim:#b8b8c6; --accent:#ff6a00;
   --tile:#1b1d28; --tile-border:#2a2b36;
   --ok:#22c55e; --bad:#ef4444; --green:#34d399;
-  --logo-url: url('https://cdn.durable.co/logos/10jUW6H5kMws6XP3Klr5QlXg6xDZZVGCvWIAeZvGSSa9C7BAhrPp5oxANMifgiKX.png');
 }
 :root[data-theme="light"] {
   --bg:#f7f8fb; --card:#ffffff; --soft:#f1f3f7; --stroke:#cfd6e0;
   --text:#101418; --text-dim:#585f6b; --accent:#ff6a00;
   --tile:#ffffff; --tile-border:#e6ebf2;
   --ok:#22c55e; --bad:#ef4444; --green:#078b62;
-  --logo-url: url('https://github.com/aliraldrabkih-stack/ali32erkl/blob/main/image-removebg-preview(8)(1).png?raw=true');
 }
-header img.logo {
-  max-height:50px; width:auto;
-  transition:filter .2s ease, opacity .2s ease;
-}
+
+/* Logo filter tweaks per theme */
+header img.logo { max-height:44px; width:auto; transition:filter .2s ease, opacity .2s ease; }
 :root[data-theme="dark"] header img.logo { filter: brightness(1.08) contrast(1.06); }
 :root[data-theme="light"] header img.logo { filter: none; }
 
@@ -70,7 +28,6 @@ header img.logo {
 body{margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
 .container{max-width:1200px;margin:0 auto;padding:20px}
 header{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-header img.logo{max-height:50px;width:auto}
 h1{margin:0;color:var(--accent);font-size:20px}
 .grow{flex:1}
 .btn{border:1px solid var(--stroke);background:transparent;color:var(--text);padding:8px 14px;border-radius:12px;cursor:pointer}
@@ -98,6 +55,8 @@ h1{margin:0;color:var(--accent);font-size:20px}
 .cell{min-height:70px;border:1px dashed var(--tile-border);border-radius:10px;padding:8px}
 .footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:10px;flex-wrap:wrap}
 #toast{position:fixed;right:20px;bottom:20px;background:var(--card);border:1px solid var(--stroke);padding:10px 14px;border-radius:10px;display:none;z-index:9999}
+
+/* Report + Certificate */
 #nameGate{display:none;background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:20px;max-width:520px;width:92%;margin:16px auto}
 #reportWrap{display:none;margin-top:14px}
 .report{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px}
@@ -106,24 +65,36 @@ h1{margin:0;color:var(--accent);font-size:20px}
 .badge{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid #b85100;background:linear-gradient(180deg, rgba(255,106,0,.20), rgba(255,106,0,.08));color:#ffe3d1}
 .badge.ok{background:rgba(34,197,94,.18);border-color:#1f6a40;color:#c9f0d9}
 .badge.bad{background:rgba(239,68,68,.18);border-color:#7a2929;color:#ffd2d2}
-:root[data-theme="light"] .badge {border-color:#b85100;background:linear-gradient(180deg, rgba(255,106,0,.12), rgba(255,106,0,.06));color:#6b3f00}
-:root[data-theme="light"] .badge.ok {background:rgba(34,197,94,.12);border-color:#1f6a40;color:#1f6a40}
-:root[data-theme="light"] .badge.bad {background:rgba(239,68,68,.12);border-color:#7a2929;color:#7a2929}
 .tableR{width:100%;border-collapse:separate;border-spacing:0;margin-top:8px}
 .tableR thead th{background:rgba(255,106,0,.18);color:#fff;border-bottom:1px solid #b85100;padding:10px;text-align:left}
 .tableR td{padding:10px;border-bottom:1px solid var(--stroke);text-align:left;color:var(--text)}
 .tableR tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
 .tableR tbody tr:hover{background:rgba(255,106,0,.10)}
-:root[data-theme="light"] .tableR thead th {background:rgba(255,106,0,.12);color:#101418;border-bottom:1px solid #b85100}
-:root[data-theme="light"] .tableR tbody tr:nth-child(odd) {background:rgba(0,0,0,.02)}
-:root[data-theme="light"] .tableR tbody tr:hover {background:rgba(255,106,0,.06)}
 .result-pill{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:700}
 .result-ok{background:rgba(34,197,94,.18);color:#9de3b8;border:1px solid #1f6a40}
 .result-bad{background:rgba(239,68,68,.18);color:#ffc3c3;border:1px solid #7a2929}
 .result-mid{background:rgba(255,106,0,.20);color:#ffd3bf;border:1px solid #b85100}
-:root[data-theme="light"] .result-ok {background:rgba(34,197,94,.12);color:#1f6a40;border:1px solid #1f6a40}
-:root[data-theme="light"] .result-bad {background:rgba(239,68,68,.12);color:#7a2929;border:1px solid #7a2929}
-:root[data-theme="light"] .result-mid {background:rgba(255,106,0,.12);color:#6b3f00;border:1px solid #b85100}
+
+/* Light-mode overrides for Report (fix white text) */
+:root[data-theme="light"] .tableR thead th {
+  background:rgba(255,106,0,.12);
+  color:#101418;
+  border-bottom:1px solid #b85100;
+}
+:root[data-theme="light"] .tableR tbody tr:nth-child(odd){ background:rgba(0,0,0,.02) }
+:root[data-theme="light"] .tableR tbody tr:hover{ background:rgba(255,106,0,.06) }
+
+:root[data-theme="light"] .badge {
+  border-color:#b85100;
+  background:linear-gradient(180deg, rgba(255,106,0,.12), rgba(255,106,0,.06));
+  color:#6b3f00;
+}
+:root[data-theme="light"] .badge.ok { background:rgba(34,197,94,.12); border-color:#1f6a40; color:#1f6a40 }
+:root[data-theme="light"] .badge.bad{ background:rgba(239,68,68,.12); border-color:#7a2929; color:#7a2929 }
+:root[data-theme="light"] .result-ok { background:rgba(34,197,94,.12); color:#1f6a40; border:1px solid #1f6a40 }
+:root[data-theme="light"] .result-bad{ background:rgba(239,68,68,.12); color:#7a2929; border:1px solid #7a2929 }
+:root[data-theme="light"] .result-mid{ background:rgba(255,106,0,.12); color:#6b3f00; border:1px solid #b85100 }
+
 #certWrap{display:none;margin-top:12px}
 #cert{
   background:radial-gradient(1200px 600px at -10% -20%, rgba(255,106,0,.25), transparent 50%),
@@ -140,7 +111,6 @@ h1{margin:0;color:var(--accent);font-size:20px}
 .brand .stack{line-height:0.95;font-weight:900;text-transform:uppercase;color:var(--accent);
   text-shadow:0 0 18px rgba(255,106,0,.28), 0 0 4px rgba(255,106,0,.65);}
 .brand .stack .small{font-size:36px}
-.brand .stack .big{font-size:60px}
 #cert .seal{width:0;height:0}
 #cert .line{height:2px;background:#222;margin:22px 0}
 #cert h2{margin:10px 0 0;font-size:36px}
@@ -151,21 +121,53 @@ h1{margin:0;color:var(--accent);font-size:20px}
 @media (max-width:768px){
   .crumb{min-width:32px;height:30px}
   .btnrow{flex-wrap:wrap}
-  .brand .stack .big{font-size:48px}
 }
 @media print{
   body{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff}
   #cert{box-shadow:none;border:1px solid #ddd}
 }
 
-/* ===== Pyramid styling for Q3 (staff) ONLY ===== */
+/* === Hotspot styles === */
+.hotimg{position:relative;max-width:1200px;margin:0 auto 10px}
+.hotimg img{width:100%;height:auto;border-radius:12px;border:1px solid var(--stroke)}
+.hotspot{position:absolute;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#111;
+  display:flex;align-items:center;justify-content:center;font-weight:800;cursor:pointer;
+  border:2px solid rgba(17,17,17,.25);box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.hotspot.answered{background:linear-gradient(180deg, rgba(255,106,0,.86), rgba(255,106,0,.66));}
+.hotpop{position:absolute;background:var(--card);border:1px solid var(--stroke);border-radius:10px;padding:10px;
+  z-index:50;display:none;min-width:220px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.hotopt{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.hotopt .btn{padding:6px 10px;border-radius:10px}
+.hotopt .btn[data-val]{border-color:var(--tile-border);}
+.hot-legend{color:var(--text-dim);font-size:13px;margin:6px 0 0}
+
+/* Labels near each hotspot */
+.hotlabel{
+  position:absolute;
+  padding:4px 8px;
+  border-radius:10px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.45);
+  color:#fff;
+  font-size:13px;
+  white-space:nowrap;
+  transform:translate(18px,-10px);
+  pointer-events:none;
+  text-shadow:0 1px 1px rgba(0,0,0,.35);
+}
+:root[data-theme="light"] .hotlabel{
+  background:rgba(255,255,255,.85);
+  color:#101418;
+  text-shadow:none;
+}
+
+/* === Pyramid list styling for Q3 (restored) === */
 .list.pyramid-list{
   gap:12px;
   align-items:center;
   padding:6px 0;
 }
 .list.pyramid-list .tile{
-  /* layer width grows downwards to look like a pyramid */
   width:var(--w,70%);
   text-align:center;
   font-weight:700;
@@ -173,7 +175,6 @@ h1{margin:0;color:var(--accent);font-size:20px}
   background:linear-gradient(180deg, rgba(255,106,0,.18), rgba(255,106,0,.08));
   border:1px solid #b85100;
   color:var(--text);
-  /* trapezoid look */
   clip-path:polygon(6% 0, 94% 0, 100% 100%, 0 100%);
 }
 :root[data-theme="light"] .list.pyramid-list .tile{
@@ -184,16 +185,33 @@ h1{margin:0;color:var(--accent);font-size:20px}
 .list.pyramid-list .tile:nth-child(2){ --w:58%; }
 .list.pyramid-list .tile:nth-child(3){ --w:76%; }
 .list.pyramid-list .tile:nth-child(4){ --w:92%; }
-/* ============================================== */
+
+/* === Simple Warning Overlay (no detection, English) === */
+#warnGate{
+  position:fixed; inset:0;
+  background:linear-gradient(135deg, rgba(255,106,0,.08), transparent 60%), var(--bg);
+  display:none; align-items:center; justify-content:center;
+  z-index:99999; padding:24px;
+}
+#warnGate .panel{
+  background:var(--card); border:1px solid var(--stroke);
+  border-radius:16px; max-width:720px; width:100%; padding:24px;
+  text-align:center; box-shadow:0 18px 60px rgba(0,0,0,.45);
+}
+#warnGate h2{ margin:0 0 8px; color:var(--accent); }
+#warnGate p{ color:var(--text-dim); margin:6px 0 0; }
+#warnGate .btnrow{ display:flex; gap:8px; justify-content:center; margin-top:16px; }
+#warnGate .btnrow .btn{ padding:10px 14px; border-radius:12px; }
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <img src="https://cdn.durable.co/logos/10jUW6H5kMws6XP3Klr5QlXg6xDZZVGCvWIAeZvGSSa9C7BAhrPp5oxANMifgiKX.png" alt="Logo" class="logo">
-    <h1 class="grow">Security+ PBQ Lesson 1</h1>
+    <img id="brandLogo" src="https://cdn.durable.co/logos/10jUW6H5kMws6XP3Klr5QlXg6xDZZVGCvWIAeZvGSSa9C7BAhrPp5oxANMifgiKX.png" alt="Logo" class="logo">
+    <h1 class="grow">Security+ PBQ — Lesson 1</h1>
     <button id="themeBtn" class="btn">🌓 Theme</button>
   </header>
+
   <div class="board" role="region" aria-label="Exercise Board">
     <div class="toolbar">
       <div class="crumbs" id="crumbs" role="tablist" aria-label="Questions Navigation"></div>
@@ -206,10 +224,8 @@ h1{margin:0;color:var(--accent);font-size:20px}
       </div>
     </div>
     <div id="stage" aria-live="polite"></div>
-    <div class="footer">
-      <div id="modeLabel" class="hint">Mode: FINAL</div>
-    </div>
   </div>
+
   <div id="reportWrap" class="report" role="region" aria-label="Exam Report">
     <h3>Exam Report</h3>
     <div class="summary">
@@ -222,11 +238,8 @@ h1{margin:0;color:var(--accent);font-size:20px}
       <thead><tr><th>#</th><th>Question</th><th>Type</th><th>Result</th></tr></thead>
       <tbody></tbody>
     </table>
-    <div class="btnrow" style="margin-top:10px">
-      <button id="downloadJSON" class="btn">⬇️ Download JSON</button>
-      <button id="printReport" class="btn">🖨️ Print Report</button>
-    </div>
   </div>
+
   <div id="nameGate" role="region" aria-label="Name Gate" style="display:none">
     <div class="card">
       <label for="studentName">Enter your full name to generate your certificate:</label>
@@ -237,12 +250,13 @@ h1{margin:0;color:var(--accent);font-size:20px}
       </div>
     </div>
   </div>
+
   <div id="certWrap" style="display:none">
     <div id="cert" role="region" aria-label="Certificate Preview">
       <div class="hdr">
         <div class="brand">
           <div class="line1"><span class="cyber">CYBER</span> <span class="academy">ACADEMY</span></div>
-          <div class="sub">Training Academy</div>
+          <div class="sub">Coaching & Mentoring</div>
           <div class="stack">
             <div class="small">CERTIFICATE</div>
             <div class="small">OF ACHIEVEMENT</div>
@@ -266,7 +280,21 @@ h1{margin:0;color:var(--accent);font-size:20px}
     </div>
   </div>
 </div>
+
+<!-- Warning-only overlay (English, no detection) -->
+<div id="warnGate" role="dialog" aria-modal="true" aria-label="Best on Desktop">
+  <div class="panel">
+    <h2>Best Experience on Desktop</h2>
+    <p>This PBQ uses drag-and-drop and wide layouts. It may be harder to use on phones or small screens.</p>
+    <div class="btnrow">
+      <button id="warnContinue" class="btn btn--primary">Continue</button>
+      <button id="warnHideForever" class="btn">Don't show again</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" role="status" aria-live="polite"></div>
+
 <script>
 const $=q=>document.querySelector(q),el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!==undefined)e.textContent=txt;return e}
 function shuffle(a){return a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1])}
@@ -274,17 +302,39 @@ function toast(m,ms=1800){const t=$("#toast");t.textContent=m;t.style.display='b
 function todayStr(){return new Date().toLocaleDateString()}
 let index=0,lastPct=0,lastGot=0,lastTotal=0,lastPerQ=[]
 const state={},meta={}
+let selectedTile=null;
 
+// THEME assets (fix logo swap)
+const LOGO_DARK  = "https://cdn.durable.co/logos/10jUW6H5kMws6XP3Klr5QlXg6xDZZVGCvWIAeZvGSSa9C7BAhrPp5oxANMifgiKX.png";
+const LOGO_LIGHT = "https://github.com/aliraldrabkih-stack/ali32erkl/blob/main/image-removebg-preview(8)(1).png?raw=true";
+function applyThemeAssets(){
+  const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const logo = document.getElementById('brandLogo');
+  if(!logo) return;
+  logo.src = theme === 'light' ? LOGO_LIGHT : LOGO_DARK;
+}
+
+// ====== Questions bank (English) ======
 const bank=[
  {id:'cia',tag:'Basics',title:'CIA Triad Classification',hint:'Drag each scenario to the correct CIA component.',type:'drag-classify',
   zones:[{id:'c',title:'Confidentiality'},{id:'i',title:'Integrity'},{id:'a',title:'Availability'}],
-  items:[{id:'cia1',text:'Credential theft / identity spoofing',zone:'c'},{id:'cia2',text:'Unauthorized modification of transaction records',zone:'i'},{id:'cia3',text:'Service outage due to DDoS',zone:'a'}]},
+  items:[
+    {id:'cia1',text:'Credential theft / identity spoofing',zone:'c'},
+    {id:'cia2',text:'Unauthorized modification of transaction records',zone:'i'},
+    {id:'cia3',text:'Service outage due to DDoS',zone:'a'}
+  ]},
 
- {id:'ir',tag:'IR',title:'Incident Response – Correct Order',hint:'Arrange the steps top→bottom.',type:'order',items:[{id:'ir1',text:'Preparation',order:1},{id:'ir2',text:'Identification',order:2},{id:'ir3',text:'Containment',order:3},{id:'ir4',text:'Eradication',order:4},{id:'ir5',text:'Recovery',order:5},{id:'ir6',text:'Lessons Learned',order:6}]},
+ {id:'ir',tag:'IR',title:'Incident Response – Correct Order',hint:'Arrange the steps top→bottom.',type:'order',
+  items:[
+    {id:'ir1',text:'Preparation',order:1},
+    {id:'ir2',text:'Identification',order:2},
+    {id:'ir3',text:'Containment',order:3},
+    {id:'ir4',text:'Eradication',order:4},
+    {id:'ir5',text:'Recovery',order:5},
+    {id:'ir6',text:'Lessons Learned',order:6}
+  ]},
 
- /* Q3: Pyramid order */
  {id:'staff',tag:'IR',title:'Security Staff Escalation Order (Pyramid)',hint:'Arrange roles from TOP (apex) to BOTTOM (base).',type:'order',
-
   items:[
     {id:'st4',text:'CISO',order:1},
     {id:'st3',text:'Incident Response Manager',order:2},
@@ -294,17 +344,38 @@ const bank=[
 
  {id:'se1',tag:'SOCIAL',title:'Social Engineering',hint:'Select the best answer.',type:'single',
   question:'A caller pretends to be the CEO and pressures the helpdesk to reset a password. What attack is this?',
-  choices:[{id:'s1',text:'Email Phishing'},{id:'s2',text:'Vishing with Pretexting',correct:true},{id:'s3',text:'Smishing'},{id:'s4',text:'Pharming'}]},
+  choices:[
+    {id:'s1',text:'Email Phishing'},
+    {id:'s2',text:'Vishing with Pretexting',correct:true},
+    {id:'s3',text:'Smishing'},
+    {id:'s4',text:'Pharming'}
+  ]},
 
  {id:'msg',tag:'SOCIAL',title:'Message-based Threat Vectors (Select ALL)',hint:'Multiple correct answers.',type:'multi',
   question:'Which of the following are message-based threat vectors?',
-  choices:[{id:'m1',text:'Email',correct:true},{id:'m2',text:'SMS',correct:true},{id:'m3',text:'Instant Messaging (IM)',correct:true},{id:'m4',text:'USB drop attack'},{id:'m5',text:'Open TCP service port'}]},
+  choices:[
+    {id:'m1',text:'Email',correct:true},
+    {id:'m2',text:'SMS',correct:true},
+    {id:'m3',text:'Instant Messaging (IM)',correct:true},
+    {id:'m4',text:'USB drop attack'},
+    {id:'m5',text:'Open TCP service port'}
+  ]},
 
  {id:'match1',tag:'Controls',title:'Match Controls to Categories',hint:'Drag each control to its category.',type:'match',
-  right:[{id:'mgr',title:'Managerial'},{id:'opr',title:'Operational'},{id:'tec',title:'Technical'},{id:'phy',title:'Physical'}],
-  left:[{id:'ml1',text:'Information security policies',target:'mgr'},{id:'ml2',text:'Security awareness training',target:'opr'},{id:'ml3',text:'Firewall rule',target:'tec'},{id:'ml4',text:'IDS alert',target:'tec'},{id:'ml5',text:'Security guard at data center',target:'phy'}]},
+  right:[
+    {id:'mgr',title:'Managerial'},
+    {id:'opr',title:'Operational'},
+    {id:'tec',title:'Technical'},
+    {id:'phy',title:'Physical'}
+  ],
+  left:[
+    {id:'ml1',text:'Information security policies',target:'mgr'},
+    {id:'ml2',text:'Security awareness training',target:'opr'},
+    {id:'ml3',text:'Firewall rule',target:'tec'},
+    {id:'ml4',text:'IDS alert',target:'tec'},
+    {id:'ml5',text:'Security guard at data center',target:'phy'}
+  ]},
 
- /* === Added single matching question (unchanged) === */
  {id:'match2',tag:'Network',title:'Match Protocols to Their Port Numbers',hint:'Drag each protocol to its correct port.',type:'match',
   right:[
     {id:'p21', title:'Port 21'},
@@ -322,22 +393,56 @@ const bank=[
 
  {id:'table1',tag:'Networking',title:'Place Services Under the Right Transport',hint:'Drag each service to the correct cell.',type:'table',
   columns:[{id:'tcp',title:'TCP'},{id:'udp',title:'UDP'}],rows:[{id:'srv',title:'Service'}],
-  items:[{id:'t80',text:'HTTP (80)',cell:'tcp'},{id:'t443',text:'HTTPS (443)',cell:'tcp'},{id:'u53',text:'DNS queries (53)',cell:'udp'},{id:'u161',text:'SNMP (161)',cell:'udp'}]},
+  items:[
+    {id:'t80',text:'HTTP (80)',cell:'tcp'},
+    {id:'t443',text:'HTTPS (443)',cell:'tcp'},
+    {id:'u53',text:'DNS queries (53)',cell:'udp'},
+    {id:'u161',text:'SNMP (161)',cell:'udp'}
+  ]},
 
  {id:'phish',tag:'SOCIAL',title:'Phishing Combinations',hint:'For each row, combine a method and the matching result.',type:'phishRows',
-  icons:[{id:'i_sms',html:'<div class="emoji">📱</div><div>SMS</div>',value:'sms'},{id:'i_dns',html:'<div class="emoji">🌐</div><div>DNS</div>',value:'dns'},{id:'i_voice',html:'<div class="emoji">📞</div><div>Voice</div>',value:'voice'}],
-  results:[{id:'r_smish',text:'Smishing',value:'sms'},{id:'r_pharm',text:'Pharming',value:'dns'},{id:'r_vish',text:'Vishing',value:'voice'}]},
+  icons:[
+    {id:'i_sms',html:'<div class="emoji">📱</div><div>SMS</div>',value:'sms'},
+    {id:'i_dns',html:'<div class="emoji">🌐</div><div>DNS</div>',value:'dns'},
+    {id:'i_voice',html:'<div class="emoji">📞</div><div>Voice</div>',value:'voice'}
+  ],
+  results:[
+    {id:'r_smish',text:'Smishing',value:'sms'},
+    {id:'r_pharm',text:'Pharming',value:'dns'},
+    {id:'r_vish',text:'Vishing',value:'voice'}
+  ]},
 
  {id:'mfa_factors',tag:'IAM',title:'MFA Factors Classification',hint:'Drag each item to the right factor.',type:'drag-classify',
-  zones:[{id:'know',title:'Knowledge (something you know)'},{id:'have',title:'Possession (something you have)'},{id:'are',title:'Inherence (something you are)'},{id:'loc',title:'Location'}],
-  items:[{id:'it1',text:'Password / PIN',zone:'know'},{id:'it2',text:'Smart card / Security key',zone:'have'},{id:'it3',text:'Fingerprint scan',zone:'are'},{id:'it4',text:'Login from known corporate IP / Geofence',zone:'loc'}]},
+  zones:[
+    {id:'know',title:'Knowledge (something you know)'},
+    {id:'have',title:'Possession (something you have)'},
+    {id:'are',title:'Inherence (something you are)'},
+    {id:'loc',title:'Location'}
+  ],
+  items:[
+    {id:'it1',text:'Password / PIN',zone:'know'},
+    {id:'it2',text:'Smart card / Security key',zone:'have'},
+    {id:'it3',text:'Fingerprint scan',zone:'are'},
+    {id:'it4',text:'Login from known corporate IP / Geofence',zone:'loc'}
+  ]},
 
  {id:'pw_best',tag:'IAM',title:'Password Best Practices (Select ALL)',hint:'Multiple correct answers.',type:'multi',
   question:'Which of the following are recommended password practices?',
-  choices:[{id:'p1',text:'Use a unique password per site',correct:true},{id:'p2',text:'Use a reputable password manager',correct:true},{id:'p3',text:'Rotate passwords every 30 days regardless',correct:false},{id:'p4',text:'Prefer long passphrases over short complexity',correct:true}]},
+  choices:[
+    {id:'p1',text:'Use a unique password per site',correct:true},
+    {id:'p2',text:'Use a reputable password manager',correct:true},
+    {id:'p3',text:'Rotate passwords every 30 days regardless',correct:false},
+    {id:'p4',text:'Prefer long passphrases over short complexity',correct:true}
+  ]},
 
  {id:'auth_flow',tag:'IAM',title:'Authentication Lifecycle Order',hint:'Arrange initial identity lifecycle (top→bottom).',type:'order',
-  items:[{id:'a1',text:'Enrollment (collect attributes)',order:1},{id:'a2',text:'Provisioning (issue creds & perms)',order:2},{id:'a3',text:'Authentication (verify identity)',order:3},{id:'a4',text:'Authorization (access rights)',order:4},{id:'a5',text:'Accounting / Auditing (logs)',order:5}]},
+  items:[
+    {id:'a1',text:'Enrollment (collect attributes)',order:1},
+    {id:'a2',text:'Provisioning (issue creds & perms)',order:2},
+    {id:'a3',text:'Authentication (verify identity)',order:3},
+    {id:'a4',text:'Authorization (access rights)',order:4},
+    {id:'a5',text:'Accounting / Auditing (logs)',order:5}
+  ]},
 
  {id:'tf1',tag:'IAM',title:'True/False',hint:'Choose True or False.',type:'single',
   question:'Kerberos uses tickets to delegate access between services.',
@@ -349,9 +454,21 @@ const bank=[
 
  {id:'tf3',tag:'Access',title:'True/False',hint:'Choose True or False.',type:'single',
   question:'Least privilege means giving minimum permissions needed.',
-  choices:[{id:'tf3a',text:'True',correct:true},{id:'tf3b',text:'False'}]}
-];
+  choices:[{id:'tf3a',text:'True',correct:true},{id:'tf3b',text:'False'}]},
 
+ /* === Hotspot (English labels) === */
+ {id:'hotmap1', tag:'Controls', title:'Identify Controls on the Company Floor Plan', hint:'Click each marker and choose the best control category.', type:'hotspot',
+  image:'https://raw.githubusercontent.com/aliraldrabkih-stack/pbq/refs/heads/main/ChatGPT%20Image%20Oct%204%2C%202025%2C%2009_24_44%20PM.png',
+  spots:[
+    {id:'s1', x:91, y:58, correct:'physical',   note:'Entrance door with keypad', label:'Entrance Door'},
+    {id:'s2', x:66, y:20, correct:'technical',  note:'Server racks',               label:'Server'},
+    {id:'s3', x:79, y:28, correct:'technical',  note:'Security appliance / firewall', label:'Firewall'},
+    {id:'s4', x:13, y:72, correct:'operational',note:'Training room with presentation', label:'Training Room'},
+    {id:'s5', x:30, y:20, correct:'managerial', note:'Manager office reviewing policies', label:"Manager's Office"},
+    {id:'s6', x:7,  y:10, correct:'physical',   note:'CCTV corner coverage',       label:'CCTV Camera'}
+  ]
+ }
+];
 
 function scoreQuestion(q,st){
  let got=0,total=0;
@@ -392,6 +509,11 @@ function scoreQuestion(q,st){
      if(lhs && rhs && lhs===rhs) got++;
    }
  }
+ else if(q.type==='hotspot'){
+   const sel=(st.sel||{});
+   total += (q.spots||[]).length;
+   (q.spots||[]).forEach(sp=>{ if(sel[sp.id] && sel[sp.id]===sp.correct) got++; });
+ }
  return {got,total}
 }
 function scoreAll(){
@@ -399,7 +521,6 @@ function scoreAll(){
  bank.forEach((q,i)=>{const st=state[q.id]||{};const r=scoreQuestion(q,st);lastPerQ.push({idx:i+1,id:q.id,title:q.title,type:q.type,got:r.got,total:r.total});got+=r.got;total+=r.total})
  return {got,total}
 }
-
 function buildReport(){
  const tbody=$("#repTable tbody");tbody.innerHTML=''
  lastPerQ.forEach(r=>{
@@ -432,7 +553,6 @@ function renderCrumbs(){
   wrap.append(c)
  })
 }
-
 function tile(it){const t=document.createElement('div');t.className='tile';t.draggable=true;t.dataset.id=it.id;if(it.html)t.innerHTML=it.html;else t.textContent=it.text||it.id;if(it.value)t.dataset.value=it.value;return t}
 function orderTile(it){return tile(it)}
 
@@ -453,7 +573,9 @@ function mount(){
  renderCrumbs();
  const s=$("#stage");s.innerHTML='';
  const card=el('div','card');
- card.append(el('div','title',`${q.title}${q.tag?` — [${q.tag}]`:''}`),el('div','hint',q.hint||''));card.setAttribute('role','region');card.setAttribute('aria-label',q.title)
+ const titleLine = q.title + (q.tag ? ' — [' + q.tag + ']' : '');
+ card.append(el('div','title', titleLine), el('div','hint', q.hint || ''));
+ card.setAttribute('role','region');card.setAttribute('aria-label',q.title)
 
  if(q.type==='drag-classify'){
    const grid=el('div','grid col-12');
@@ -466,7 +588,6 @@ function mount(){
 
  if(q.type==='order'){
    const list=el('div','list');
-   // خاص بالسؤال الثالث: عرض هرمي وتغيير شكل الصناديق فقط
    if(q.id==='staff'){ list.classList.add('pyramid-list'); }
    const st=state[q.id]=state[q.id]||{order:shuffle(q.items.map(i=>i.id))};
    st.order.forEach(id=>{const it=q.items.find(x=>x.id===id);const t=orderTile(it);if(q.id==='staff'){t.classList.add('pyr');}list.append(t)});
@@ -505,6 +626,20 @@ function mount(){
    grid.append(left,right);card.append(grid)
  }
 
+ if(q.type==='table'){
+   const grid=el('div','grid col-12');
+   const left=el('div','col-4');left.append(el('div','hint','Items'));const bucket=el('div','dropzone');left.append(bucket);grid.append(left);
+   const right=el('div','col-8');
+   const table=el('table','table');
+   const header=document.createElement('tr');header.append(document.createElement('th'));
+   q.columns.forEach(c=>{const th=document.createElement('th');th.textContent=c.title;header.append(th)});table.append(header);
+   q.rows.forEach(r=>{const tr=document.createElement('tr');const th=document.createElement('th');th.textContent=r.title;tr.append(th);
+     q.columns.forEach(c=>{const td=document.createElement('td');td.className='cell';td.dataset.cell=c.id;tr.append(td)});table.append(tr)
+   });
+   right.append(table);grid.append(right);card.append(grid);
+   const st=state[q.id]=state[q.id]||{cells:{}};q.items.forEach(it=>{const t=tile(it);const cell=st.cells[it.id];const target=cell?card.querySelector(`[data-cell="${cell}"]`):bucket;(target||bucket).append(t)})
+ }
+
  if(q.type==='phishRows'){
    const st=state[q.id]=state[q.id]||{};
    const container=el('div','grid col-12');
@@ -526,16 +661,67 @@ function mount(){
    container.append(rowsCol,resCol);card.append(container)
  }
 
- if(q.type==='table'){
-   const grid=el('div','grid col-12');
-   const left=el('div','col-4');left.append(el('div','hint','Items'));const bucket=el('div','dropzone');left.append(bucket);grid.append(left);
-   const right=el('div','col-8');const table=el('table','table');const header=document.createElement('tr');header.append(document.createElement('th'));
-   q.columns.forEach(c=>{const th=document.createElement('th');th.textContent=c.title;header.append(th)});table.append(header);
-   q.rows.forEach(r=>{const tr=document.createElement('tr');const th=document.createElement('th');th.textContent=r.title;tr.append(th);
-     q.columns.forEach(c=>{const td=document.createElement('td');td.className='cell';td.dataset.cell=c.id;tr.append(td)});table.append(tr)
+ if(q.type==='hotspot'){
+   const st=state[q.id]=state[q.id]||{sel:{}};
+   const wrap=el('div','');
+   const holder=el('div','hotimg');
+   const img=new Image(); img.src=q.image; img.alt='Company floor plan'; img.onload=()=>{};
+   holder.append(img);
+
+   (q.spots||[]).forEach((sp,i)=>{
+     const dot=el('div','hotspot', String(i+1));
+     dot.style.left = `calc(${sp.x}% - 14px)`;
+     dot.style.top  = `calc(${sp.y}% - 14px)`;
+     if(st.sel[sp.id]) dot.classList.add('answered');
+
+     const label=el('div','hotlabel', sp.label || '');
+     label.style.left = `calc(${sp.x}% )`;
+     label.style.top  = `calc(${sp.y}% )`;
+
+     const pop=el('div','hotpop');
+     pop.innerHTML = `<div class="hint">Choose the control type</div>`;
+     const row=el('div','hotopt');
+     const opts=[
+       {k:'managerial',label:'Managerial'},
+       {k:'operational',label:'Operational'},
+       {k:'technical',label:'Technical'},
+       {k:'physical',label:'Physical'}
+     ];
+     opts.forEach(op=>{
+       const b=el('button','btn',op.label);
+       b.setAttribute('data-val', op.k);
+       if(st.sel[sp.id]===op.k){ b.classList.add('btn--primary'); }
+       b.onclick=(ev)=>{
+         st.sel[sp.id]=op.k;
+         dot.classList.add('answered');
+         pop.style.display='none';
+         ev.stopPropagation();
+       };
+       row.append(b);
+     });
+     const clr=el('button','btn','Clear');
+     clr.onclick=(ev)=>{ delete st.sel[sp.id]; dot.classList.remove('answered'); pop.style.display='none'; ev.stopPropagation(); };
+     row.append(clr);
+     pop.append(row);
+     holder.append(dot);
+     holder.append(label);
+     holder.append(pop);
+
+     dot.onclick=(ev)=>{
+       pop.style.left = `calc(${sp.x}% + 18px)`;
+       pop.style.top  = `calc(${sp.y}% - 10px)`;
+       pop.style.display = (pop.style.display==='block'?'none':'block');
+       ev.stopPropagation();
+     };
    });
-   right.append(table);grid.append(right);card.append(grid);
-   const st=state[q.id]=state[q.id]||{cells:{}};q.items.forEach(it=>{const t=tile(it);const cell=st.cells[it.id];const target=cell?card.querySelector(`[data-cell="${cell}"]`):bucket;(target||bucket).append(t)})
+
+   holder.addEventListener('click', ()=>{
+     holder.querySelectorAll('.hotpop').forEach(p=>p.style.display='none');
+   });
+
+   wrap.append(holder);
+   wrap.append(el('div','hot-legend', 'Tip: Click a marker, then pick a category. You can change your choice later.'));
+   card.append(wrap);
  }
 
  $("#stage").append(card);
@@ -596,9 +782,6 @@ function place(q,z,id){
  if(q.type==='table'){st.cells=st.cells||{};const cell=z.dataset.cell||null;if(cell){st.cells[id]=cell}else{delete st.cells[id]}}
 }
 
-let selectedTile=null
-function enableKeyboardPick(){document.querySelectorAll('.tile').forEach(t=>{t.tabIndex=0;t.addEventListener('keydown',e=>{if(e.key==='Enter'){selectedTile=t;toast('Tile selected. Click a dropzone to place.')}})})}
-
 function finishExam(){
  for(const q of bank){
   const st=state[q.id]||{};let isAnswered=false
@@ -609,6 +792,7 @@ function finishExam(){
   else if(q.type==='match'){isAnswered=st.map&&Object.keys(st.map).length>0}
   else if(q.type==='table'){isAnswered=st.cells&&Object.keys(st.cells).length>0}
   else if(q.type==='phishRows'){for(let r=1;r<=3;r++){if(st['plus'+r+'_id']||st['eq'+r+'_id']){isAnswered=true;break}}}
+  else if(q.type==='hotspot'){isAnswered = st.sel && Object.keys(st.sel).length>0}
   if(!isAnswered){toast(`Please answer all questions before finishing the exam.`,3000);return}
  }
  const {got,total}=scoreAll();lastGot=got;lastTotal=total;lastPct=total?Math.round((got/total)*100):0
@@ -631,35 +815,28 @@ function openCertificate(){
 }
 
 function closeCert(){ $("#certWrap").style.display='none' }
-
 function printCert(){
- const cert=$("#cert");
- const btnRow=$("#certWrap .btnrow");
- if(btnRow)btnRow.style.display='none';
+ const cert=$("#cert"); const btnRow=$("#certWrap .btnrow"); if(btnRow)btnRow.style.display='none';
  html2canvas(cert,{backgroundColor:null,scale:2}).then(canvas=>{
   if(btnRow)btnRow.style.display='flex';
-  const link=document.createElement('a');
-  link.href=canvas.toDataURL('image/png');
-  link.download='certificate.png';
-  link.click();
- }).catch(err=>{
-  console.error('Error generating PNG:',err);
-  toast('Failed to generate certificate. Please try again.');
-  if(btnRow)btnRow.style.display='flex';
- });
+  const link=document.createElement('a'); link.href=canvas.toDataURL('image/png'); link.download='certificate.png'; link.click();
+ }).catch(()=>{toast('Failed to generate image. Try again.'); if(btnRow)btnRow.style.display='flex';});
 }
 
-function downloadReportJSON(){
- const payload={date:new Date().toISOString(),score:{got:lastGot,total:lastTotal,pct:lastPct},perQuestion:lastPerQ}
- const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob)
- const a=document.createElement('a');a.href=url;a.download='exam-report.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)
-}
+// Warning overlay controls
+function showWarn(){ const g=$("#warnGate"); if(!g) return; g.style.display='flex'; document.body.style.overflow='hidden'; }
+function hideWarn(){ const g=$("#warnGate"); if(!g) return; g.style.display='none'; document.body.style.overflow=''; }
+$("#warnContinue").onclick=hideWarn;
+$("#warnHideForever").onclick=()=>{ try{ localStorage.setItem('PBQ_WARN_ACK','1'); }catch(e){} hideWarn(); };
 
-function printReport(){
- const w=window.open('','_blank');
- w.document.write('<pre style="font-family:ui-monospace,monospace;padding:16px">'+JSON.stringify({score:`${lastPct}%`,perQuestion:lastPerQ},null,2)+'</pre>');
- w.document.close();w.focus();w.print()
-}
+// Theme toggle: switch attribute, button label, and logo
+$("#themeBtn").onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme')||'dark';
+  const next = cur==='dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  $("#themeBtn").textContent=cur==='dark'?'🌞 Theme':'🌓 Theme';
+  applyThemeAssets(); // << ensure logo swaps
+};
 
 $("#next").onclick=()=>{index=(index+1)%bank.length;mount()}
 $("#prev").onclick=()=>{index=(index-1+bank.length)%bank.length;mount()}
@@ -670,18 +847,22 @@ $("#buildCert").onclick=openCertificate
 $("#closeGate").onclick=()=>{$("#nameGate").style.display='none'}
 $("#printCert").onclick=printCert
 $("#closeCert").onclick=closeCert
-$("#downloadJSON").onclick=downloadReportJSON
-$("#printReport").onclick=printReport
-$("#themeBtn").onclick=()=>{
-  const cur=document.documentElement.getAttribute('data-theme')||'dark';
-  document.documentElement.setAttribute('data-theme',cur==='dark'?'light':'dark');
-  $("#themeBtn").textContent=cur==='dark'?'🌞 Theme':'🌓 Theme';
-  const logo=$("header img.logo");
-  logo.src=cur==='dark'?'https://github.com/aliraldrabkih-stack/ali32erkl/blob/main/image-removebg-preview(8)(1).png?raw=true':'https://cdn.durable.co/logos/10jUW6H5kMws6XP3Klr5QlXg6xDZZVGCvWIAeZvGSSa9C7BAhrPp5oxANMifgiKX.png';
-}
 
-function init(){mount()}
-init()
+// Boot
+function boot(){
+  try{
+    const ack = localStorage.getItem('PBQ_WARN_ACK');
+    if(ack!=='1') showWarn();
+  }catch(e){
+    showWarn();
+  }
+  applyThemeAssets(); // set correct logo for initial theme
+  init();
+}
+function init(){mount();enableKeyboardPick()}
+function enableKeyboardPick(){document.querySelectorAll('.tile').forEach(t=>{t.tabIndex=0;t.addEventListener('keydown',e=>{if(e.key==='Enter'){selectedTile=t;toast('Tile selected. Click a dropzone to place.')}})})}
+
+window.addEventListener('load', boot);
 </script>
 </body>
 </html>
