@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Security+ PBQ — Lesson 1 (Aligned 15 Qs)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{ --match-gap:184px; }
+:root[data-theme="dark"] {
+  --bg:#0c0d10; --card:#111217; --soft:#171a23; --stroke:#2a2f3a;
+  --text:#f5f7fb; --text-dim:#b8c0cf; --accent:#ff6a00;
+  --tile:#1b1f2b; --tile-border:#2a2f3a;
+  --ok:#22c55e; --bad:#ef4444; --green:#34d399;
+  --chip:#1b1f2b; --chipTxt:#ffd9bf;
+  --grad: radial-gradient(1000px 600px at -10% -20%, rgba(255,106,0,.22), transparent 50%);
+}
+:root[data-theme="light"] {
+  --bg:#f7f8fb; --card:#ffffff; --soft:#f1f3f7; --stroke:#cfd6e0;
+  --text:#101418; --text-dim:#5c6472; --accent:#ff6a00;
+  --tile:#ffffff; --tile-border:#e6ebf2;
+  --ok:#22c55e; --bad:#ef4444; --green:#078b62;
+  --chip:#fff1e6; --chipTxt:#7a3000;
+  --grad: radial-gradient(1000px 600px at -10% -20%, rgba(255,106,0,.12), transparent 50%);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background-color:var(--bg);
+  background-image:var(--grad);
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+  color:var(--text)
+}
+.container{max-width:1200px;margin:0 auto;padding:22px}
+header{
+  position:sticky; top:0; z-index:1000;
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;
+  background:linear-gradient(180deg, rgba(0,0,0,.18), transparent), var(--bg);
+  backdrop-filter:saturate(120%) blur(8px);
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:10px 12px;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);
+}
+h1{
+  margin:0;color:var(--accent);font-size:20px;letter-spacing:.2px;font-weight:900;
+  padding:4px 10px;border-radius:10px;position:relative;isolation:isolate
+}
+h1::after{
+  content:'';position:absolute;inset:0;z-index:-1;border-radius:10px;
+  background:linear-gradient(90deg, rgba(255,106,0,.20), transparent 60%);
+  opacity:.35; transition:opacity .2s ease;
+}
+h1:hover::after{opacity:.55}
+.grow{flex:1}
+header img.logo { max-height:44px; width:auto; transition:filter .2s ease, opacity .2s ease; }
+:root[data-theme="dark"] header img.logo { filter: brightness(1.08) contrast(1.06); }
+:root[data-theme="light"] header img.logo { filter:none; }
+.btn{border:1px solid var(--stroke);background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.04));color:var(--text);
+  padding:9px 14px;border-radius:12px;cursor:pointer;transition:transform .08s ease, box-shadow .12s ease, background .2s ease}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.btn:active{transform:translateY(0)}
+.btn--primary{background:linear-gradient(180deg, rgba(255,106,0,1), rgba(255,106,0,.85));color:#111;border-color:#ff6a00;font-weight:800}
+.btnrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.board{background:rgba(15,16,22,.7);backdrop-filter: blur(8px);border:1px solid var(--stroke);border-radius:16px;padding:16px}
+.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.progress{display:flex;align-items:center;gap:10px}
+.progress .bar{width:220px;height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid var(--stroke)}
+.progress .bar > i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#ff6a00,#ffa96b)}
+.progress .txt{color:var(--text-dim);font-size:13px}
+.crumbs{display:flex;gap:6px;flex-wrap:wrap}
+.crumb{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:32px;padding:0 10px;background:var(--soft);border:1px solid var(--stroke);border-radius:10px;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.crumb.active{background:var(--accent);color:#111;border-color:var(--accent);font-weight:800}
+.crumb.done{outline:2px solid rgba(34,197,94,.35)}
+.crumb.flagged::after{content:'🚩';margin-left:4px}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.15)), var(--card);
+  border:1px solid var(--stroke);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)
+}
+.title{display:flex;align-items:center;gap:8px;color:var(--accent);margin-bottom:4px;font-weight:900;letter-spacing:.2px}
+.tagchip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);color:var(--chipTxt);border:1px solid rgba(255,106,0,.35);padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.hint{color:var(--text-dim);font-size:13px;margin:8px 0}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+.col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
+.choices{display:grid;gap:10px}
+.choice{position:relative;border:1px solid var(--stroke);background:var(--soft);padding:12px;border-radius:12px;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:8px;overflow:hidden}
+.choice:hover{transform:translateY(-1px)}
+.choice[aria-checked="true"]{outline:2px solid var(--accent);box-shadow:0 0 0 3px rgba(255,106,0,.18) inset}
+.choice .ripple{position:absolute;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;background:rgba(255,106,0,.25);animation:ripple .5s ease-out forwards}
+@keyframes ripple{from{width:0;height:0;opacity:.8}to{width:600px;height:600px;opacity:0}}
+.dropzone{min-height:84px;border:1.5px dashed var(--tile-border);border-radius:12px;padding:10px;margin-bottom:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;transition:border-color .12s, background .12s, transform .08s}
+.dropzone.hintlabel::before{content:attr(data-label);font-size:12px;color:var(--text-dim);position:absolute;transform:translateY(-140%)}
+.dropzone.active{border-color:var(--accent);background:linear-gradient(180deg, rgba(255,106,0,.12), rgba(255,106,0,.06))}
+.dropzone.hot{outline:2px solid rgba(255,106,0,.35)}
+.tile{background:var(--tile);padding:10px 12px;border-radius:12px;border:1px solid var(--stroke);display:inline-flex;align-items:center;gap:8px;cursor:grab;font-size:16px;touch-action:none;transition:transform .08s ease, box-shadow .12s ease}
+.tile.round{border-radius:999px}
+.tile.dragging{opacity:.92;transform:scale(1.03);box-shadow:0 10px 20px rgba(0,0,0,.25)}
+.tile.drop-pop{animation:pop .18s ease}
+@keyframes pop{from{transform:scale(.96)}to{transform:scale(1)}}
+.tile .ico{font-size:18px;opacity:.9}
+.list{display:flex;flex-direction:column;gap:12px}
+.tile.order{display:grid;grid-template-columns:34px 36px 1fr;align-items:center; gap:10px; padding:12px 14px; cursor:grab}
+.tile.order .hdl{font-size:18px;opacity:.65;text-align:center}
+.tile.order .num{width:36px;height:28px;border-radius:999px;background:rgba(255,106,0,.15);color:#ffddb9;font-weight:900;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,106,0,.35)}
+:root[data-theme="light"] .tile.order .num{background:rgba(255,106,0,.10);color:#7a3000}
+.tile.order .txt{font-weight:700;letter-spacing:.2px}
+.ghost-line{height:12px;border-radius:8px;background:linear-gradient(90deg, rgba(255,106,0,.55), rgba(255,106,0,.15));outline:1px dashed rgba(255,106,0,.55)}
+.list.pyramid-list{ gap:14px; align-items:center; padding:10px 0; position:relative }
+.list.pyramid-list:before{content:'TOP';position:absolute;top:-6px;left:12px;font-size:12px;color:var(--text-dim)}
+.list.pyramid-list:after{content:'BASE';position:absolute;bottom:-6px;left:12px;font-size:12px;color:var(--text-dim)}
+.list.pyramid-list .tile{
+  width:var(--w,70%); text-align:center; font-weight:800; letter-spacing:.2px;
+  background:linear-gradient(180deg, rgba(255,106,0,.18), rgba(255,106,0,.08));
+  border:1px solid #b85100; color:var(--text);
+  clip-path:polygon(6% 0, 94% 0, 100% 100%, 0 100%);
+  padding:14px 16px;
+}
+:root[data-theme="light"] .list.pyramid-list .tile{
+  background:linear-gradient(180deg, rgba(255,106,0,.12), rgba(255,106,0,.05));
+  color:#101418;
+}
+.list.pyramid-list .tile:nth-child(1){ --w:42%; }
+.list.pyramid-list .tile:nth-child(2){ --w:60%; }
+.list.pyramid-list .tile:nth-child(3){ --w:78%; }
+.list.pyramid-list .tile:nth-child(4){ --w:95%; }
+.match-wrap{position:relative}
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:var(--match-gap);align-items:start}
+.mleft .mitem,.mright .mcat{
+  border:1px solid var(--stroke);background:var(--soft);
+  padding:10px;border-radius:12px;margin:10px 0;position:relative;cursor:pointer;
+  font-size:.95em;
+}
+.mleft .mitem.active{outline:2px solid var(--accent)}
+.mright .mcat{font-weight:700}
+.manchor{position:absolute;top:50%;transform:translateY(-50%);width:12px;height:12px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px rgba(255,106,0,.18)}
+.mleft .mitem .manchor{right:-6px}
+.mright .mcat .manchor{left:-6px}
+.match-svg{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+path.rope{fill:none;stroke:#ff6a00;stroke-width:6;stroke-linecap:round;}
+.tfgroup{display:flex;gap:14px}
+.tfbtn{
+  flex:1; padding:18px; border-radius:14px; font-weight:900; letter-spacing:.3px;
+  border:1px solid var(--stroke); background:var(--soft); cursor:pointer; position:relative; overflow:hidden;
+  text-align:center; transition:transform .08s ease, box-shadow .12s ease, outline .12s ease;
+}
+.tfbtn:hover{ transform:translateY(-1px); box-shadow:0 10px 24px rgba(0,0,0,.18); }
+.tfbtn.true{ outline:2px solid rgba(34,197,94,.25); }
+.tfbtn.false{ outline:2px solid rgba(239,68,68,.25); }
+.tfbtn.selected.true{ outline:3px solid var(--ok); box-shadow:0 0 0 3px rgba(34,197,94,.18) inset; }
+.tfbtn.selected.false{ outline:3px solid var(--bad); box-shadow:0 0 0 3px rgba(239,68,68,.18) inset; }
+.tfbtn .stamp{
+  position:absolute; inset:auto; right:14px; bottom:10px;
+  font-weight:900; font-size:13px; opacity:.85; transform:rotate(-8deg);
+  padding:6px 8px; border-radius:6px;
+}
+.tfbtn.true .stamp{ background:rgba(34,197,94,.18); border:1px solid var(--ok); color:#9de3b8; }
+.tfbtn.false .stamp{ background:rgba(239,68,68,.18); border:1px solid var(--bad); color:#ffc3c3; }
+#nameGate{display:none;background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:20px;max-width:520px;width:92%;margin:16px auto}
+#reportWrap{display:none;margin-top:14px}
+.report{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px}
+.report h3{margin:0 0 10px;color:#111;background:var(--accent);display:inline-block;padding:6px 10px;border-radius:10px}
+.report .summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid #b85100;background:linear-gradient(180deg, rgba(255,106,0,.20), rgba(255,106,0,.08));color:#ffe3d1}
+.badge.ok{background:rgba(34,197,94,.18);border-color:#1f6a40;color:#c9f0d9}
+.badge.bad{background:rgba(239,68,68,.18);border-color:#7a2929;color:#ffd2d2}
+.tableR{width:100%;border-collapse:separate;border-spacing:0;margin-top:8px}
+.tableR thead th{background:rgba(255,106,0,.18);color:#fff;border-bottom:1px solid #b85100;padding:10px;text-align:left}
+.tableR td{padding:10px;border-bottom:1px solid var(--stroke);text-align:left;color:var(--text)}
+.tableR tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
+.tableR tbody tr:hover{background:rgba(255,106,0,.10)}
+.result-pill{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:700}
+.result-ok{background:rgba(34,197,94,.18);color:#9de3b8;border:1px solid #1f6a40}
+.result-bad{background:rgba(239,68,68,.18);color:#ffc3c3;border:1px solid #7a2929}
+.result-mid{background:rgba(255,106,0,.20);color:#ffd3bf;border:1px solid #b85100}
+:root[data-theme="light"] .tableR thead th { background:rgba(255,106,0,.12); color:#101418; border-bottom:1px solid #b85100; }
+:root[data-theme="light"] .tableR tbody tr:nth-child(odd){ background:rgba(0,0,0,.02) }
+:root[data-theme="light"] .tableR tbody tr:hover{ background:rgba(255,106,0,.06) }
+:root[data-theme="light"] .badge { border-color:#b85100; background:linear-gradient(180deg, rgba(255,106,0,.12), rgba(255,106,0,.06)); color:#6b3f00; }
+:root[data-theme="light"] .badge.ok { background:rgba(34,197,94,.12); border-color:#1f6a40; color:#1f6a40 }
+:root[data-theme="light"] .badge.bad{ background:rgba(239,68,68,.12); border-color:#7a2929; color:#7a2929 }
+:root[data-theme="light"] .result-ok { background:rgba(34,197,94,.12); color:#1f6a40; border:1px solid #1f6a40 }
+:root[data-theme="light"] .result-bad{ background:rgba(239,68,68,.12); color:#7a2929; border:1px solid #7a2929 }
+:root[data-theme="light"] .result-mid{ background:rgba(255,106,0,.12); color:#6b3f00; border:1px solid #b85100 }
+
+/* === Hotspot styles === */
+.hotimg{position:relative;max-width:1200px;margin:0 auto 10px}
+.hotimg img{width:100%;height:auto;border-radius:12px;border:1px solid var(--stroke)}
+.hotspot{position:absolute;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#111;
+  display:flex;align-items:center;justify-content:center;font-weight:800;cursor:pointer;
+  border:2px solid rgba(17,17,17,.25);box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.hotspot.answered{background:linear-gradient(180deg, rgba(255,106,0,.86), rgba(255,106,0,.66));}
+.hotpop{position:absolute;background:var(--card);border:1px solid var(--stroke);border-radius:10px;padding:10px;
+  z-index:50;display:none;min-width:220px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.hotopt{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.hotopt .btn{padding:6px 10px;border-radius:10px}
+.hotopt .btn[data-val]{border-color:var(--tile-border);}
+.hot-legend{color:var(--text-dim);font-size:13px;margin:6px 0 0}
+
+/* Labels near each hotspot */
+.hotlabel{
+  position:absolute;
+  padding:4px 8px;
+  border-radius:10px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.45);
+  color:#fff;
+  font-size:13px;
+  white-space:nowrap;
+  transform:translate(18px,-10px);
+  pointer-events:none;
+  text-shadow:0 1px 1px rgba(0,0,0,.35);
+}
+:root[data-theme="light"] .hotlabel{
+  background:rgba(255,255,255,.85);
+  color:#101418;
+  text-shadow:none;
+}
+
+#certWrap{display:none;margin-top:12px}
+#cert{
+  background:radial-gradient(1200px 600px at -10% -20%, rgba(255,106,0,.25), transparent 50%),
+             linear-gradient(135deg,#0a0a0a 0%,#0b0c0f 60%,#111 100%);
+  color:#fff;border-radius:28px;padding:40px;max-width:1100px;margin:auto;
+  box-shadow:0 12px 60px rgba(0,0,0,.45);border:1px solid #1f1f1f
+}
+#cert .hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;gap:8px;min-width:320px}
+.brand .line1{font-weight:900;letter-spacing:6px}
+.brand .line1 .cyber{color:var(--accent)}
+.brand .line1 .academy{color:#f5f5f7}
+.brand .sub{font-size:13px;color:#bdbdc7}
+.brand .stack{line-height:0.95;font-weight:900;text-transform:uppercase;color:var(--accent);
+  text-shadow:0 0 18px rgba(255,106,0,.28), 0 0 4px rgba(255,106,0,.65);}
+.brand .stack .small{font-size:36px}
+#cert .seal{width:0;height:0}
+#cert .line{height:2px;background:#222;margin:22px 0}
+#cert h2{margin:10px 0 0;font-size:36px}
+#cert .muted{color:#cfd2da}
+#cert .meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px}
+#cert .laurel{font-size:16px;color:var(--green);font-weight:800}
+#cert .scoreBadge{display:inline-block;padding:10px 14px;border:1px solid var(--accent);border-radius:12px;color:#ffdda6;font-weight:800;background:rgba(255,106,0,.10)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:rgba(0,0,0,.75);color:#fff;padding:10px 14px;border-radius:10px;display:none;z-index:2000}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <img id="brandLogo" src="https://cdn.durable.co/logos/10jUW6H5kMws6XP3Klr5QlXg6xDZZVGCvWIAeZvGSSa9C7BAhrPp5oxANMifgiKX.png" alt="Logo" class="logo">
+    <h1 class="grow">Security+ PBQ — Lesson 1</h1>
+    <div class="progress">
+      <div class="bar"><i id="progFill"></i></div>
+      <div class="txt" id="progTxt">Q1/15</div>
+    </div>
+    <button id="themeBtn" class="btn">🌓 Theme</button>
+  </header>
+
+  <div class="board" role="region" aria-label="Exercise Board">
+    <div class="toolbar">
+      <div class="crumbs" id="crumbs" role="tablist" aria-label="Questions Navigation"></div>
+      <div class="btnrow">
+        <button class="btn" id="prev">⟨ Prev</button>
+        <button class="btn" id="next">Next ⟩</button>
+        <button class="btn" id="flagBtn">Flag</button>
+        <button class="btn btn--primary" id="finishBtn">Finish Exam</button>
+        <button class="btn" id="resetAll">Reset</button>
+      </div>
+    </div>
+    <div id="stage" aria-live="polite"></div>
+  </div>
+
+  <div id="reportWrap" class="report" role="region" aria-label="Exam Report">
+    <h3>Exam Report</h3>
+    <div class="summary">
+      <span class="badge" id="repTotal">Questions: 0</span>
+      <span class="badge ok" id="repCorrect">Correct: 0</span>
+      <span class="badge bad" id="repWrong">Wrong: 0</span>
+      <span class="badge" id="repScore">Score: 0%</span>
+    </div>
+    <table class="tableR" id="repTable">
+      <thead><tr><th>#</th><th>Question</th><th>Type</th><th>Result</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="nameGate" role="region" aria-label="Name Gate" style="display:none">
+    <div class="card">
+      <label for="studentName">Enter your full name to generate your certificate:</label>
+      <div class="btnrow" style="margin-top:8px">
+        <input id="studentName" placeholder="Your name" style="padding:8px;border-radius:8px;border:1px solid var(--stroke);background:var(--soft);color:var(--text);min-width:260px"/>
+        <button id="buildCert" class="btn btn--primary">Generate Certificate</button>
+        <button id="closeGate" class="btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="certWrap" style="display:none">
+    <div id="cert" role="region" aria-label="Certificate Preview">
+      <div class="hdr">
+        <div class="brand">
+          <div class="line1"><span class="cyber">CYBER</span> <span class="academy">ACADEMY</span></div>
+          <div class="sub">Coaching & Mentoring</div>
+          <div class="stack">
+            <div class="small">CERTIFICATE</div>
+            <div class="small">OF ACHIEVEMENT</div>
+          </div>
+        </div>
+        <div class="seal"></div>
+      </div>
+      <div class="line"></div>
+      <h2 id="certName">Student Name</h2>
+      <p class="muted">has successfully completed the CompTIA Security+ PBQ for Lesson 1.</p>
+      <div class="meta">
+        <div class="laurel">Awarded on <span id="certDate"></span></div>
+        <div class="scoreBadge" id="certScore">Score: 0% • <span id="passFlag">FAIL</span></div>
+      </div>
+      <div class="line"></div>
+      <p class="muted" style="opacity:.9">This certificate reflects your overall result. It is honorary and not an official score report.</p>
+    </div>
+    <div class="btnrow" style="justify-content:center; margin-top:12px">
+      <button id="printCert" class="btn btn--primary">Save PNG</button>
+      <button id="closeCert" class="btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Non-blocking tip overlay -->
+<div id="warnGate" role="dialog" aria-modal="true" aria-label="Best on Desktop" style="display:flex;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);z-index:2147483647;">
+  <div class="panel" style="background:var(--card);color:var(--text);border:1px solid var(--stroke);border-radius:16px;padding:20px;width:min(92vw,540px);box-shadow:0 20px 60px rgba(0,0,0,.45);">
+    <h2>Best Experience on Desktop</h2>
+    <p>This PBQ uses drag-and-drop and wide layouts. It may be harder to use on phones or small screens.</p>
+    <div class="btnrow">
+      <button id="warnContinue" class="btn btn--primary">Continue</button>
+      <button id="warnHideForever" class="btn">Don't show again</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const $=q=>document.querySelector(q),el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!==undefined)e.textContent=txt;return e}
+function ripple(e){const r=document.createElement('span');r.className='ripple';r.style.left=e.offsetX+'px';r.style.top=e.offsetY+'px';e.currentTarget.append(r);setTimeout(()=>r.remove(),500)}
+function shuffle(a){return a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1])}
+function toast(m,ms=1800){const t=$("#toast");t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',ms)}
+function todayStr(){return new Date().toLocaleDateString()}
+let index=0,lastPct=0,lastGot=0,lastTotal=0,lastPerQ=[]
+const state={},meta={}
+let selectedTile=null;
+
+// Theme assets
+const LOGO_DARK  = "https://cdn.durable.co/logos/10jUW6H5kMws6XP3Klr5QlXg6xDZZVGCvWIAeZvGSSa9C7BAhrPp5oxANMifgiKX.png";
+const LOGO_LIGHT = "https://github.com/aliraldrabkih-stack/ali32erkl/blob/main/image-removebg-preview(8)(1).png?raw=true";
+function applyThemeAssets(){
+  const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const logo = document.getElementById('brandLogo');
+  if(!logo) return;
+  logo.src = theme === 'light' ? LOGO_LIGHT : LOGO_DARK;
+}
+
+// Tag icons
+const tagIcon = {'Basics':'📘','Controls':'🧰','Roles':'🧑‍💼','Units':'🏢','Framework':'🧭','AAA':'🔐'};
+
+/* =====================
+   QUESTIONS — Lesson 1 (14 total, strictly on-syllabus)
+   ===================== */
+const bank=[
+
+/* 1) CIA Triad — drag-classify */
+{id:'cia_drag',tag:'Basics',title:'CIA Triad Classification',hint:'Drag each concept to the correct pillar.',type:'drag-classify',
+ zones:[
+   {id:'C',title:'Confidentiality'},
+   {id:'I',title:'Integrity'},
+   {id:'A',title:'Availability'}
+ ],
+ items:[
+   {id:'c1',text:'Only authorized persons can read data',zone:'C'},
+   {id:'i1',text:'Data is stored/transferred as intended',zone:'I'},
+   {id:'a1',text:'Authorized users can access when needed',zone:'A'}
+ ]},
+
+/* 2) Non-repudiation — single */
+{id:'nonrep_single',tag:'Basics',title:'Non-repudiation',hint:'Tap to answer.',type:'single',
+ question:'Non-repudiation ensures that a person cannot deny creating or modifying data.',
+ choices:[
+   {id:'nr_t',text:'True',correct:true},
+   {id:'nr_f',text:'False'}
+ ]},
+
+/* 3) Cybersecurity Framework Functions — order */
+{id:'csf_order',tag:'Framework',title:'NIST CSF: High-Level Functions — Order',hint:'Put them in a sensible lifecycle order.',type:'order',
+ items:[
+   {id:'f1',text:'Identify'},
+   {id:'f2',text:'Protect'},
+   {id:'f3',text:'Detect'},
+   {id:'f4',text:'Respond'},
+   {id:'f5',text:'Recover'}
+ ]},
+
+/* 4) Gap Analysis basics — single */
+{id:'gap_single',tag:'Framework',title:'Gap Analysis Concept',hint:'Tap to answer.',type:'single',
+ question:'A gap analysis compares current capability against desired/required capability to find deficiencies.',
+ choices:[
+   {id:'ga_t',text:'True',correct:true},
+   {id:'ga_f',text:'False'}
+ ]},
+
+/* 5) AAA vs Access Control — order (AAA chain) */
+{id:'aaa_order',tag:'AAA',title:'AAA/Access Control Flow',hint:'Arrange steps from start to finish.',type:'order',
+ items:[
+   {id:'idn',text:'Identification'},
+   {id:'aut',text:'Authentication'},
+   {id:'authz',text:'Authorization'},
+   {id:'acct',text:'Accounting/Auditing'}
+ ]},
+
+/* 6) Control Categories — drag-classify */
+{id:'ctrl_cats',tag:'Controls',title:'Security Control Categories',hint:'Classify each example.',type:'drag-classify',
+ zones:[
+   {id:'mgr',title:'Managerial'},
+   {id:'ops',title:'Operational'},
+   {id:'tech',title:'Technical'},
+   {id:'phys',title:'Physical'}
+ ],
+ items:[
+   {id:'ex_policy',text:'Security policy',zone:'mgr'},
+   {id:'ex_training',text:'User awareness training',zone:'ops'},
+   {id:'ex_fw',text:'Firewall rule/ACL',zone:'tech'},
+   {id:'ex_lock',text:'Door lock / badge reader',zone:'phys'}
+ ]},
+
+/* 7) Functional Control Types — match (set 1) */
+{id:'ctrl_func1',tag:'Controls',title:'Functional Types → Description (1)',hint:'Match each type to its description.',type:'match',
+ right:[
+   {id:'prev',title:'Preventive'},
+   {id:'det', title:'Detective'},
+   {id:'corr',title:'Corrective'}
+ ],
+ left:[
+   {id:'m1',text:'Operates before an attack to restrict unauthorized access',target:'prev'},
+   {id:'m2',text:'Identifies attempted/successful intrusions during an attack',target:'det'},
+   {id:'m3',text:'Responds after an incident to fix and prevent recurrence',target:'corr'}
+ ]},
+
+/* 8) Functional Control Types — match (set 2) */
+{id:'ctrl_func2',tag:'Controls',title:'Functional Types → Description (2)',hint:'Match each type to its description.',type:'match',
+ right:[
+   {id:'dir',title:'Directive'},
+   {id:'dtr',title:'Deterrent'},
+   {id:'comp',title:'Compensating'}
+ ],
+ left:[
+   {id:'m4',text:'Enforces a rule of behavior (e.g., policy/standard)',target:'dir'},
+   {id:'m5',text:'Discourages attacks psychologically (e.g., signs/cameras)',target:'dtr'},
+   {id:'m6',text:'Substitutes for a principal control to meet compliance',target:'comp'}
+ ]},
+
+/* 9) Roles & Responsibilities — match */
+{id:'roles_match',tag:'Roles',title:'Information Security Roles → Responsibility',hint:'Match each role to the most fitting responsibility.',type:'match',
+ right:[
+   {id:'cio',title:'CIO'},
+   {id:'cso',title:'CSO/CISO'},
+   {id:'isso',title:'ISSO'}
+ ],
+ left:[
+   {id:'r1',text:'Overall organizational responsibility for information systems',target:'cio'},
+   {id:'r2',text:'Overall responsibility for security program & risk posture',target:'cso'},
+   {id:'r3',text:'Implementing/overseeing security controls day-to-day',target:'isso'}
+ ]},
+
+/* 10) Competencies — multi */
+{id:'compet_multi',tag:'Roles',title:'Core Security Competencies (Select ALL)',hint:'Pick all that apply.',type:'multi',
+ question:'Which are typical information security competencies?',
+ choices:[
+   {id:'co1',text:'Risk assessments and testing',correct:true},
+   {id:'co2',text:'Access control and user privileges',correct:true},
+   {id:'co3',text:'Auditing logs and events',correct:true},
+   {id:'co4',text:'Incident response and reporting',correct:true},
+   {id:'co5',text:'Landscape gardening'}
+ ]},
+
+/* 11) Business Units — match */
+{id:'units_match',tag:'Units',title:'Security Business Units → Focus',hint:'Match unit to its focus.',type:'match',
+ right:[
+   {id:'soc',title:'Security Operations Center (SOC)'},
+   {id:'devsec',title:'DevSecOps'},
+   {id:'cirt',title:'Incident Response (CIRT)'}
+ ],
+ left:[
+   {id:'u1',text:'24/7 monitoring, detection, triage',target:'soc'},
+   {id:'u2',text:'Integrating security into development and operations',target:'devsec'},
+   {id:'u3',text:'Coordinated handling and reporting of incidents',target:'cirt'}
+ ]},
+
+/* 12) Framework mapping — single */
+{id:'iam_protect',tag:'Framework',title:'Framework Mapping',hint:'Tap to answer.',type:'single',
+ question:'Identity and Access Management (IAM) capabilities are primarily associated with which high-level function?',
+ choices:[
+   {id:'fp',text:'Protect',correct:true},
+   {id:'fi',text:'Identify'},
+   {id:'fd',text:'Detect'},
+   {id:'fr',text:'Respond'}
+ ]},
+
+/* 13) Administrative controls — multi */
+{id:'admin_multi',tag:'Controls',title:'Administrative (Management) Controls (Select ALL)',hint:'Pick the administrative ones.',type:'multi',
+ question:'Which of the following are administrative controls?',
+ choices:[
+   {id:'ad1',text:'Security policies and standards',correct:true},
+   {id:'ad2',text:'Background screening',correct:true},
+   {id:'ad3',text:'User awareness training',correct:true},
+   {id:'ad4',text:'IDS signatures'},
+   {id:'ad5',text:'Data center turnstiles'}
+ ]},
+
+/* 14) Least privilege — single */
+{id:'leastpriv_single',tag:'AAA',title:'Least Privilege',hint:'Tap to answer.',type:'single',
+ question:'Least privilege means granting only the minimum permissions required to perform tasks.',
+ choices:[
+   {id:'lp_t',text:'True',correct:true},
+   {id:'lp_f',text:'False'}
+ ]}
+];
+
+/* 15) Hotspot — Identify Controls on a Floor Plan */
+bank.push({
+  id:'hotmap1',
+  tag:'Controls',
+  title:'Identify Controls on the Company Floor Plan',
+  hint:'Click each marker and choose the best control category.',
+  type:'hotspot',
+  image:'https://raw.githubusercontent.com/aliraldrabkih-stack/pbq/refs/heads/main/ChatGPT%20Image%20Oct%204%2C%202025%2C%2009_24_44%20PM.png',
+  spots:[
+    {id:'s1', x:91, y:58, correct:'physical',    note:'Entrance door with keypad',             label:'Entrance Door'},
+    {id:'s2', x:66, y:20, correct:'technical',   note:'Server racks',                          label:'Server'},
+    {id:'s3', x:79, y:28, correct:'technical',   note:'Security appliance / firewall',         label:'Firewall'},
+    {id:'s4', x:13, y:72, correct:'operational', note:'Training room with presentation',       label:'Training Room'},
+    {id:'s5', x:30, y:20, correct:'managerial',  note:'Manager office reviewing policies',     label:"Manager's Office"},
+    {id:'s6', x:7,  y:10, correct:'physical',    note:'CCTV corner coverage',                  label:'CCTV Camera'}
+  ]
+});
+
+/* ========= Utility & Scoring ========= */
+const LOGICAL_TOTAL = bank.length; // now 15
+
+function isAnswered(q,st){
+  if(q.type==='drag-classify') return st.placed && Object.keys(st.placed).length>0;
+  if(q.type==='order') return st.order && st.order.length>0;
+  if(q.type==='single') return !!st.answer;
+  if(q.type==='multi') return st.answers && st.answers.length>0;
+  if(q.type==='match') return st.map && Object.keys(st.map).length>0;
+  if(q.type==='hotspot') return st.answers && Object.keys(st.answers).length>0;
+  return false;
+}
+function scoreQuestion(q,st){
+ let got=0,total=0;
+ if(q.type==='drag-classify'){
+   total+=q.items.length;
+   q.items.forEach(it=>{ if(st.placed && st.placed[it.id]===it.zone) got++; });
+ }
+ else if(q.type==='order'){
+   total+=q.items.length;
+   const seq=(st.order||[]);
+   const right=[...(q.items||[])];
+   right.forEach((it,idx)=>{ if(seq[idx]===it.id) got++; });
+ }
+ else if(q.type==='single'){
+   total+=1;
+   const right=(q.choices||[]).find(x=>x.correct);
+   if(st.answer===right?.id) got++;
+ }
+ else if(q.type==='multi'){
+   const correct=(q.choices||[]).filter(x=>x.correct).map(x=>x.id);
+   total+=correct.length;
+   (st.answers||[]).forEach(id=>{ if(correct.includes(id)) got++; });
+ }
+ else if(q.type==='match'){
+   const lefts=q.left||[];
+   total+=lefts.length;
+   lefts.forEach(i=>{ if(st.map && st.map[i.id]===i.target) got++; });
+ }
+ else if(q.type==='hotspot'){
+   const answers = (st.answers||{});
+   total += (q.spots||[]).length;
+   (q.spots||[]).forEach(sp=>{
+     if(answers[sp.id] && answers[sp.id] === sp.correct) got++;
+   });
+ }
+ return {got,total}
+}
+function scoreAll(){
+ let got=0,total=0;lastPerQ=[]
+ bank.forEach((q,i)=>{const st=state[q.id]||{};const r=scoreQuestion(q,st);lastPerQ.push({idx:i+1,id:q.id,title:q.title,type:q.type,got:r.got,total:r.total});got+=r.got;total+=r.total})
+ return {got,total}
+}
+function buildReport(){
+ const tbody=$("#repTable tbody");tbody.innerHTML=''
+ lastPerQ.forEach(r=>{
+  let label,cls;
+  if(r.total===0){label='—';cls='result-mid'}
+  else if(r.got===r.total){label='Correct';cls='result-ok'}
+  else if(r.got===0){label='Wrong';cls='result-bad'}
+  else {label=`${r.got}/${r.total}`;cls='result-mid'}
+  const tr=document.createElement('tr')
+  tr.innerHTML=`<td>${r.idx}</td><td>${r.title}</td><td>${r.type}</td><td><span class="result-pill ${cls}">${label}</span></td>`
+  tbody.append(tr)
+ })
+ $("#repTotal").textContent=`Questions: ${bank.length}`
+ $("#repCorrect").textContent=`Correct: ${lastPerQ.filter(r=>r.total>0&&r.got===r.total).length}`
+ $("#repWrong").textContent=`Wrong: ${lastPerQ.filter(r=>r.total>0&&r.got<r.total).length}`
+ const {got,total}=scoreAll(); const pct=total?Math.round((got/total)*100):0;
+ lastPct=pct; $("#repScore").textContent=`Score: ${pct}%`
+ $("#reportWrap").style.display='block'
+}
+
+/* ========= Renderers ========= */
+function renderCrumbs(){
+ const wrap=$("#crumbs");wrap.innerHTML=''
+ bank.forEach((q,i)=>{
+  const c=el('button','crumb','Q'+(i+1));
+  c.setAttribute('role','tab');
+  c.setAttribute('aria-selected',i===index?'true':'false');
+  c.setAttribute('aria-label',`Question ${i+1}${meta[q.id]?.flagged ? ', flagged for review' : ''}`);
+  if(i===index)c.classList.add('active');
+  const st=state[q.id]||{}; if(isAnswered(q,st)) c.classList.add('done');
+  if(meta[q.id]?.flagged)c.classList.add('flagged');
+  c.onclick=()=>{index=i;mount()};
+  wrap.append(c)
+ })
+ const pct = Math.round(((index+1)/bank.length)*100);
+ $("#progFill").style.width = pct + "%";
+ $("#progTxt").textContent = `Q${index+1}/${bank.length}`;
+}
+function tile(it){
+  const t=document.createElement('div'); t.className='tile round'; t.draggable=true; t.dataset.id=it.id;
+  const ico=el('span','ico', it.ico || '•');
+  const txt=el('span','', it.text || it.id);
+  t.append(ico,txt);
+  t.addEventListener('animationend',()=>t.classList.remove('drop-pop'));
+  return t;
+}
+function orderTile(it){
+  const t=document.createElement('div'); t.className='tile order'; t.draggable=true; t.dataset.id=it.id;
+  t.innerHTML = `<div class="hdl">≡</div><div class="num">•</div><div class="txt">${it.text}</div>`;
+  t.tabIndex=0;
+  t.addEventListener('keydown', (e)=>{
+    const list = t.parentElement;
+    if(e.key==='ArrowUp'){ e.preventDefault(); const prev=t.previousElementSibling; if(prev) list.insertBefore(t, prev); renumberOrder(list); syncOrderState(list); }
+    if(e.key==='ArrowDown'){ e.preventDefault(); const next=t.nextElementSibling; if(next) list.insertBefore(next, t); renumberOrder(list); syncOrderState(list); }
+  });
+  return t;
+}
+function toggleFlag(){
+ const q=bank[index];meta[q.id]=meta[q.id]||{flagged:false};
+ meta[q.id].flagged=!meta[q.id].flagged;
+ $("#flagBtn").textContent=meta[q.id].flagged?'Unflag':'Flag';
+ $("#flagBtn").setAttribute('aria-pressed',meta[q.id].flagged?'true':'false');
+ toast(meta[q.id].flagged?`Question ${index+1} flagged for review`:`Question ${index+1} unflagged`,2000);
+ renderCrumbs();
+}
+function mount(){
+ const q=bank[index];meta[q.id]=meta[q.id]||{flagged:false};
+ $("#flagBtn").textContent=meta[q.id].flagged?'Unflag':'Flag';
+ $("#flagBtn").setAttribute('aria-pressed',meta[q.id].flagged?'true':'false');
+
+ renderCrumbs();
+ const s=$("#stage");s.innerHTML='';
+ const card=el('div','card');
+
+ const chip=el('span','tagchip', (tagIcon[q.tag]||'❓') + ' ' + q.tag);
+ const titleNode=el('div','title'); titleNode.append(chip, document.createTextNode(' ' + q.title));
+ card.append(titleNode, el('div','hint', q.hint || ''));
+ card.setAttribute('role','region');card.setAttribute('aria-label',q.title)
+
+ if(q.type==='drag-classify'){
+   const grid=el('div','grid col-12');
+   const left=el('div','col-4');left.append(el('div','hint','Items'));const bucket=el('div','dropzone');left.append(bucket);grid.append(left);
+   const right=el('div','col-8');const zones=el('div','grid');
+   q.zones.forEach(z=>{const col=el('div','col-6');col.append(el('div','hint',z.title));const dz=el('div','dropzone');dz.dataset.zone=z.id;dz.dataset.label=z.title;dz.classList.add('hintlabel');col.append(dz);zones.append(col)});
+   right.append(zones);grid.append(right);card.append(grid);
+   const st=state[q.id]=state[q.id]||{placed:{}};shuffle(q.items).forEach(it=>{const t=tile(it);const zone=st.placed[it.id];const target=zone?card.querySelector(`[data-zone="${zone}"]`):bucket;(target||bucket).append(t)})
+ }
+
+ if(q.type==='order'){
+   const list=el('div','list');
+   const st=state[q.id]=state[q.id]||{order:shuffle(q.items.map(i=>i.id))};
+   st.order.forEach(id=>{const it=q.items.find(x=>x.id===id);const t=orderTile(it);list.append(t)});
+   card.append(list);
+   enableSortable(list,q, true);
+   renumberOrder(list);
+ }
+
+ if(q.type==='single'||q.type==='multi'){
+   card.append(el('div','hint',q.question));
+   const box=el('div','choices');const st=state[q.id]=state[q.id]||{};
+   if(q.type==='single' && q.choices.length===2 && q.choices.map(c=>c.text.toLowerCase()).includes('true') && q.choices.map(c=>c.text.toLowerCase()).includes('false')){
+     const trueId = q.choices.find(c=>c.text.toLowerCase()==='true').id;
+     const falseId = q.choices.find(c=>c.text.toLowerCase()==='false').id;
+     const grp=el('div','tfgroup');
+     const btnT=el('div','tfbtn true','TRUE'); const stampT=el('div','stamp','✓ True'); btnT.append(stampT);
+     const btnF=el('div','tfbtn false','FALSE'); const stampF=el('div','stamp','✗ False'); btnF.append(stampF);
+     if(st.answer===trueId) btnT.classList.add('selected'); if(st.answer===falseId) btnF.classList.add('selected');
+     btnT.onclick=()=>{ st.answer=trueId; mount(); };
+     btnF.onclick=()=>{ st.answer=falseId; mount(); };
+     grp.append(btnF, btnT);
+     box.append(grp);
+   }else{
+     q.choices.forEach(c=>{
+       const ch=el('div','choice',c.text);
+       ch.addEventListener('click',ev=>{
+         ripple(ev);
+         if(q.type==='single'){ st.answer=c.id; mount(); }
+         else{ const S=new Set(st.answers||[]); const on=S.has(c.id); on?S.delete(c.id):S.add(c.id); st.answers=[...S]; ch.setAttribute('aria-checked',(!on)+''); }
+       });
+       if(q.type==='single'){
+         ch.setAttribute('role','radio');ch.setAttribute('aria-checked',st.answer===c.id?'true':'false');
+       }else{
+         const on=(st.answers||[]).includes(c.id);
+         ch.setAttribute('role','checkbox');ch.setAttribute('aria-checked',on?'true':'false');
+       }
+       box.append(ch);
+     });
+   }
+   card.append(box)
+ }
+
+ if(q.type==='match'){
+   const st=state[q.id]=state[q.id]||{map:{}};
+   const wrap=el('div','match-wrap');
+   const cols=el('div','match-cols');
+   const leftCol=el('div','mleft');
+   const rightCol=el('div','mright');
+   const leftSet = shuffle([...(q.left||[])]);
+   const rightSet= shuffle([...(q.right||[])]);
+   let activeL=null;
+   leftSet.forEach(L=>{
+     const item=el('div','mitem',L.text);
+     item.dataset.left=L.id;
+     const dot=el('div','manchor'); item.append(dot);
+     item.onclick=()=>{ activeL = (activeL===L.id? null : L.id); document.querySelectorAll('.mitem').forEach(n=>n.classList.toggle('active',n.dataset.left===activeL)); paint(); };
+     leftCol.append(item);
+   });
+   rightSet.forEach(R=>{
+     const cat=el('div','mcat',R.title);
+     cat.dataset.right=R.id;
+     const dot=el('div','manchor'); cat.append(dot);
+     cat.onclick=()=>{
+       if(!activeL) return;
+       st.map[activeL]=R.id;
+       activeL=null;
+       document.querySelectorAll('.mitem').forEach(n=>n.classList.remove('active'));
+       paint();
+     };
+     rightCol.append(cat);
+   });
+   cols.append(leftCol,rightCol);
+   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.classList.add('match-svg');
+   wrap.append(cols,svg);
+   card.append(wrap);
+
+   function centerRight(elm){const b=elm.getBoundingClientRect();const c=wrap.getBoundingClientRect();return {x:b.right-c.left, y:(b.top+b.height/2)-c.top};}
+   function centerLeft(elm){const b=elm.getBoundingClientRect();const c=wrap.getBoundingClientRect();return {x:b.left-c.left, y:(b.top+b.height/2)-c.top};}
+   function paint(){
+     const R=wrap.getBoundingClientRect(); svg.setAttribute('viewBox',`0 0 ${R.width} ${R.height}`); svg.setAttribute('width',R.width); svg.setAttribute('height',R.height);
+     while(svg.firstChild) svg.removeChild(svg.firstChild);
+     Object.entries(st.map).forEach(([lid,rid])=>{
+       const Lnode=leftCol.querySelector(`.mitem[data-left="${lid}"]`);
+       const Rnode=rightCol.querySelector(`.mcat[data-right="${rid}"]`);
+       if(!Lnode||!Rnode) return;
+       const a=centerRight(Lnode), b=centerLeft(Rnode);
+       const dx=Math.max(180, (b.x-a.x)/2);
+       const d=`M ${a.x} ${a.y} C ${a.x+dx} ${a.y}, ${b.x-dx} ${b.y}, ${b.x} ${b.y}`;
+       const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+       path.setAttribute('d',d); path.setAttribute('class','rope'); svg.appendChild(path);
+     });
+   }
+   new ResizeObserver(()=>paint()).observe(wrap);
+   setTimeout(paint,0);
+ }
+
+ if(q.type==='hotspot'){
+   const st = state[q.id] = state[q.id] || { answers:{} };
+   const wrap = el('div','');
+   const hot = el('div','hotimg');
+
+   // الصورة
+   const img = new Image();
+   img.src = q.image;
+   img.alt = q.title;
+   img.onload = ()=>positionAll();
+   hot.append(img);
+
+   // بوب-أب خيارات
+   const pop = el('div','hotpop');
+   const qtxt = el('div','', 'Choose the best control category:');
+   const opt = el('div','hotopt');
+   const opts = [
+     {val:'physical', txt:'Physical'},
+     {val:'technical', txt:'Technical'},
+     {val:'operational', txt:'Operational'},
+     {val:'managerial', txt:'Managerial'}
+   ];
+   let activeSpot = null;
+   opts.forEach(o=>{
+     const b = el('button','btn'); b.textContent=o.txt; b.setAttribute('data-val',o.val);
+     b.onclick = ()=>{
+       if(!activeSpot) return;
+       st.answers[activeSpot.dataset.sid] = o.val;
+       activeSpot.classList.add('answered');
+       pop.style.display='none';
+       renderCrumbs();
+     };
+     opt.append(b);
+   });
+   pop.append(qtxt,opt);
+   hot.append(pop);
+
+   // إنشاء النقاط واللّيبلات
+   (q.spots||[]).forEach((sp,i)=>{
+     const dot = el('div','hotspot', String(i+1));
+     dot.dataset.sid = sp.id;
+     if(st.answers[sp.id]) dot.classList.add('answered');
+     hot.append(dot);
+
+     if(sp.label){
+       const lab = el('div','hotlabel', sp.label);
+       hot.append(lab);
+       dot._label = lab;
+     }
+
+     dot.onclick = ()=>{
+       activeSpot = dot;
+       pop.style.display='block';
+       // تموضع البوب-أب قرب النقطة
+       const r = dot.getBoundingClientRect();
+       const P = hot.getBoundingClientRect();
+       pop.style.left = Math.min(Math.max(r.left - P.left + 34, 8), P.width - pop.offsetWidth - 8) + 'px';
+       pop.style.top  = Math.min(Math.max(r.top  - P.top  - 4,  8), P.height - pop.offsetHeight - 8) + 'px';
+     };
+
+     dot._data = sp;
+   });
+
+   function positionAll(){
+     const W = img.clientWidth, H = img.clientHeight;
+     const nodes = [...hot.querySelectorAll('.hotspot')];
+     nodes.forEach(dot=>{
+       const sp = dot._data;
+       const left = (sp.x/100)*W;
+       const top  = (sp.y/100)*H;
+       dot.style.left = (left - 14) + 'px';
+       dot.style.top  = (top  - 14) + 'px';
+
+       if(dot._label){
+         dot._label.style.left = left + 'px';
+         dot._label.style.top  = top  + 'px';
+       }
+     });
+   }
+   new ResizeObserver(()=>positionAll()).observe(hot);
+
+   document.addEventListener('click',(e)=>{
+     if(!pop.contains(e.target) && !e.target.classList.contains('hotspot')){
+       pop.style.display='none';
+     }
+   });
+
+   card.append(hot);
+ }
+
+ $("#stage").append(card);
+ wireDnD(q);
+ enableKeyboardPick()
+}
+function renumberOrder(list){
+  [...list.children].forEach((node,i)=>{
+    const num = node.querySelector('.num'); if(num) num.textContent = (i+1);
+  });
+}
+function syncOrderState(list){
+  const ids=[...list.querySelectorAll('.tile.order')].map(n=>n.dataset.id);
+  const st=state[bank[index].id]=state[bank[index].id]||{};st.order=ids;
+}
+function enableSortable(list,q,withGhost=false){
+ let ghost=null;
+ list.addEventListener('dragstart',e=>{
+   if(e.target.classList.contains('tile')){ e.dataTransfer.effectAllowed='move'; e.target.classList.add('dragging'); highlightDropzones(true); }
+ })
+ list.addEventListener('dragover',e=>{
+   e.preventDefault();
+   const dragging=list.querySelector('.tile.dragging');
+   if(!dragging)return;
+   const els=[...list.querySelectorAll('.tile:not(.dragging)')];
+   let after=null;
+   for(const ch of els){
+     const b=ch.getBoundingClientRect();
+     const off=e.clientY-b.top-b.height/2;
+     if(off<0){ after=ch; break; }
+   }
+   if(withGhost){
+     if(!ghost){ ghost=document.createElement('div'); ghost.className='ghost-line'; }
+     if(after) list.insertBefore(ghost, after); else list.append(ghost);
+   }
+ })
+ list.addEventListener('drop',()=>{
+   const dragging=list.querySelector('.tile.dragging');
+   if(!dragging)return;
+   if(list.contains(dragging)){
+     if(ghost && list.contains(ghost)) list.insertBefore(dragging, ghost);
+     else list.append(dragging);
+   }
+   dragging.classList.remove('dragging'); dragging.classList.add('drop-pop');
+   if(ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+   ghost=null; highlightDropzones(false);
+   syncOrderState(list);
+   renumberOrder(list);
+ })
+ list.addEventListener('dragend',()=>{
+   document.querySelectorAll('.tile').forEach(t=>t.classList.remove('dragging'));
+   if(ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+   ghost=null; highlightDropzones(false);
+ })
+}
+function highlightDropzones(on){
+  document.querySelectorAll('.dropzone,.cell').forEach(z=>z.classList.toggle('active', !!on));
+}
+function wireDnD(q){
+ document.querySelectorAll('.tile').forEach(t=>{
+   t.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',t.dataset.id); t.classList.add('dragging'); highlightDropzones(true)});
+   t.addEventListener('dragend',()=>{t.classList.remove('dragging'); highlightDropzones(false)});
+ })
+ document.querySelectorAll('.dropzone,.cell').forEach(z=>{
+  z.addEventListener('dragover',e=>{e.preventDefault(); z.classList.add('hot')})
+  z.addEventListener('dragleave',()=>z.classList.remove('hot'))
+  z.addEventListener('drop',e=>{e.preventDefault();z.removeAttribute('aria-busy');z.classList.remove('hot');const id=e.dataTransfer.getData('text/plain');place(q,z,id)})
+  z.addEventListener('click',()=>{if(selectedTile){place(q,z,selectedTile.dataset.id);selectedTile=null}})
+ })
+}
+function place(q,z,id){
+ const node=document.querySelector(`.tile[data-id="${id}"]`);if(!node)return
+ z.append(node);
+ node.classList.add('drop-pop');
+ const st=state[q.id]=state[q.id]||{}
+ if(q.type==='drag-classify'){st.placed=st.placed||{};const zone=z.dataset.zone||null;if(zone){st.placed[id]=zone}else{delete st.placed[id]}}
+ if(q.type==='match'){/* map handled via click ropes */}
+}
+function finishExam(){
+ const res=scoreAll(); lastGot=res.got; lastTotal=res.total; lastPct=res.total?Math.round((res.got/res.total)*100):0;
+ buildReport();
+ if(lastPct<75){
+   toast(`Score: ${lastPct}%. Certificate is available only at 75% or higher.`,3500);
+   return;
+ }
+ $("#nameGate").style.display='block'
+ $("#studentName").focus()
+}
+function openCertificate(){
+ const name=$("#studentName").value?.trim();if(!name){toast('Please enter your name.');return}
+ if(typeof lastPct==='undefined'||lastPct===null){const res=scoreAll();lastGot=res.got;lastTotal=res.total;lastPct=res.total?Math.round((res.got/res.total)*100):0;buildReport()}
+ if(lastPct<75){toast('Certificate generation is only available for scores of 75% or higher.',3000);return}
+ $("#certName").textContent=name
+ $("#certDate").textContent=todayStr()
+ $("#passFlag").textContent='PASS'
+ $("#certScore").textContent=`Score: ${lastPct}% • PASS`
+ $("#nameGate").style.display='none'
+ const wrap=$("#certWrap");wrap.style.display='block';wrap.scrollIntoView({behavior:'smooth',block:'start'})
+}
+function closeCert(){ $("#certWrap").style.display='none' }
+function printCert(){
+ const cert=$("#cert"); const btnRow=$("#certWrap .btnrow"); if(btnRow)btnRow.style.display='none';
+ html2canvas(cert,{backgroundColor:null,scale:2}).then(canvas=>{
+  if(btnRow)btnRow.style.display='flex';
+  const link=document.createElement('a'); link.href=canvas.toDataURL('image/png'); link.download='certificate.png'; link.click();
+ }).catch(()=>{toast('Failed to generate image. Try again.'); if(btnRow)btnRow.style.display='flex';});
+}
+function enableKeyboardPick(){document.querySelectorAll('.tile.round').forEach(t=>{t.tabIndex=0;t.addEventListener('keydown',e=>{if(e.key==='Enter'){selectedTile=t;toast('Tile selected. Click a dropzone to place.')}})})}
+function showWarn(){ const g=$("#warnGate"); if(!g) return; g.style.display='flex'; document.body.style.overflow='hidden'; }
+function hideWarn(){ const g=$("#warnGate"); if(!g) return; g.style.display='none'; document.body.style.overflow=''; }
+$("#warnContinue").onclick=hideWarn;
+$("#warnHideForever").onclick=()=>{ try{ localStorage.setItem('PBQ_WARN_ACK','1'); }catch(e){} hideWarn(); };
+$("#themeBtn").onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme')||'dark';
+  const next = cur==='dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  $("#themeBtn").textContent=cur==='dark'?'🌞 Theme':'🌓 Theme';
+  applyThemeAssets();
+};
+$("#next").onclick=()=>{index=(index+1)%bank.length;mount()}
+$("#prev").onclick=()=>{index=(index-1+bank.length)%bank.length;mount()}
+$("#flagBtn").onclick=toggleFlag
+$("#resetAll").onclick=()=>{if(confirm('Reset all progress?')){for(const k in state)delete state[k];for(const k in meta)delete meta[k];index=0;mount();$("#reportWrap").style.display='none';$("#certWrap").style.display='none';$("#nameGate").style.display='none'}}
+$("#finishBtn").onclick=finishExam
+$("#buildCert").onclick=openCertificate
+$("#closeGate").onclick=()=>{$("#nameGate").style.display='none'}
+$("#printCert").onclick=printCert
+$("#closeCert").onclick=closeCert
+function renumberOrder(list){ [...list.children].forEach((node,i)=>{ const num = node.querySelector('.num'); if(num) num.textContent = (i+1); }); }
+function init(){mount();enableKeyboardPick()}
+function boot(){ try{ const ack = localStorage.getItem('PBQ_WARN_ACK'); if(ack!=='1') showWarn(); else hideWarn(); }catch(e){} applyThemeAssets(); init(); }
+window.addEventListener('load', boot);
+</script>
+</body>
+</html>
