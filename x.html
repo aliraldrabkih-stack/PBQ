@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Flashcards</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ========================= THEME ========================= */
+:root {
+  --accent: #ff7b00;
+  --accent-hover: #ff9c4d;
+  --bg-dark: #0f0f12;
+  --bg-light: #f3f3f6;
+  --card-dark: #1c1c23;
+  --card-light: #ffffff;
+  --text-dark: #121212;
+  --text-light: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  transition: .4s;
+}
+
+body.light { background: var(--bg-light); color: var(--text-dark); }
+
+/* ========================= THEME SWITCH ========================= */
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  left: 22px;
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: .3s;
+  font-size: 15px;
+}
+.theme-toggle:hover {
+  background: var(--accent);
+  color: white;
+}
+
+/* ========================= CARD ========================= */
+.card-container {
+  width: 92%;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.card {
+  width: 100%;
+  max-height: 70vh;
+  min-height: 260px;
+  padding: 40px;
+  background: var(--card-dark);
+  border-radius: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(18px, 3vw, 32px);
+  text-align: center;
+  cursor: pointer;
+  transition: .45s;
+  box-shadow: 0px 25px 60px rgba(0,0,0,0.45);
+  user-select: none;
+}
+
+body.light .card {
+  background: var(--card-light);
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+/* Flip container */
+.inner {
+  width: 100%;
+  height: 100%;
+  transition: transform .75s cubic-bezier(.22, .61, .36, 1);
+  transform-style: preserve-3d;
+}
+
+.card.flipped .inner { transform: rotateY(180deg); }
+
+/* Sides */
+.side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+/* Back Side */
+.back {
+  transform: rotateY(180deg);
+  color: var(--accent-hover);
+  font-weight: 600;
+}
+
+/* ========================= NAVIGATION ========================= */
+.controls {
+  margin-top: 20px;
+  gap: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  padding: 10px 26px;
+  border-radius: 14px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+.ctrl-btn:hover {
+  background: var(--accent);
+  color: var(--bg-dark);
+}
+.ctrl-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.counter {
+  font-size: 17px;
+  opacity: .7;
+}
+
+/* Bottom right icons */
+.bottom-right {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  display: flex;
+  gap: 20px;
+}
+
+.icon {
+  font-size: 22px;
+  cursor: pointer;
+  opacity: .6;
+  transition: .25s;
+}
+.icon:hover {
+  opacity: 1;
+  color: var(--accent);
+}
+</style>
+</head>
+
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌙 Theme</button>
+
+<div class="card-container">
+  <div class="card" id="card" onclick="flipCard()">
+    <div class="inner">
+      <div class="side front" id="front"></div>
+      <div class="side back" id="back"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn" onclick="prevCard()" id="prevBtn">⬅</button>
+    <span class="counter" id="progress"></span>
+    <button class="ctrl-btn" onclick="nextCard()" id="nextBtn">➡</button>
+  </div>
+</div>
+
+
+<!-- Menu Buttons -->
+<div class="bottom-right">
+  <span class="icon" onclick="shuffle()">🔀</span>
+  <span class="icon" onclick="toggleFull()">⛶</span>
+</div>
+
+<script>
+const flashcards = [
+  {q:"What are the four main principles of information security described in Lesson 1?", a:"Confidentiality, Integrity, Availability, and Non-repudiation."},
+  {q:"What does authentication mean?", a:"Verifying a user's identity."},
+  {q:"What does authorization mean?", a:"Determining what a user is allowed to do."},
+  {q:"What is non-repudiation?", a:"Ensuring actions cannot be denied later."},
+  {q:"Example of a preventive control?", a:"Firewall / MFA / Access Restrictions"},
+  {q:"Detective controls work when?", a:"During a malicious event or attack."},
+  {q:"Corrective control purpose?", a:"Restore function after damage."},
+  {q:"What is SOC?", a:"Security Operations Center."},
+  {q:"What is DevSecOps?", a:"Security integrated into development and operations."},
+  {q:"CIA stands for?", a:"Confidentiality | Integrity | Availability"}
+];
+
+let index = 0, flipped = false;
+
+function updateCard() {
+  document.getElementById("front").textContent = flashcards[index].q;
+  document.getElementById("back").textContent = flashcards[index].a;
+  document.getElementById("progress").textContent = `${index + 1} / ${flashcards.length}`;
+  document.getElementById("prevBtn").disabled = index === 0;
+  document.getElementById("nextBtn").disabled = index === flashcards.length - 1;
+  document.getElementById("card").classList.remove("flipped");
+  flipped = false;
+}
+
+function flipCard() {
+  flipped = !flipped;
+  document.getElementById("card").classList.toggle("flipped", flipped);
+}
+
+function nextCard() { if (index < flashcards.length - 1) index++; updateCard(); }
+function prevCard() { if (index > 0) index--; updateCard(); }
+function shuffle() { index = Math.floor(Math.random()*flashcards.length); updateCard(); }
+
+function toggleFull(){
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
+updateCard();
+</script>
+</body>
+</html>
