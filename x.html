@@ -112,7 +112,7 @@ body.light .card {
 
 /* ========================= NAVIGATION ========================= */
 .controls {
-  margin-top: 20px;
+  margin-top: 25px;
   gap: 25px;
   display: flex;
   justify-content: center;
@@ -125,7 +125,7 @@ body.light .card {
   color: var(--accent);
   padding: 10px 26px;
   border-radius: 14px;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   transition: 0.25s;
 }
@@ -139,28 +139,20 @@ body.light .card {
 }
 
 .counter {
-  font-size: 17px;
-  opacity: .7;
-}
-
-/* Bottom right icons */
-.bottom-right {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  display: flex;
-  gap: 20px;
-}
-
-.icon {
-  font-size: 22px;
-  cursor: pointer;
+  font-size: 14px;
   opacity: .6;
-  transition: .25s;
+  margin: 0 6px;
+  display: inline-block;
 }
-.icon:hover {
-  opacity: 1;
-  color: var(--accent);
+
+/* PERFECT CENTERING FIX */
+.footer-container {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  bottom: 35px;
+  display: flex;
+  justify-content: center;
 }
 </style>
 </head>
@@ -176,19 +168,15 @@ body.light .card {
       <div class="side back" id="back"></div>
     </div>
   </div>
+</div>
 
+<!-- Navigation perfectly centered -->
+<div class="footer-container">
   <div class="controls">
     <button class="ctrl-btn" onclick="prevCard()" id="prevBtn">⬅</button>
     <span class="counter" id="progress"></span>
     <button class="ctrl-btn" onclick="nextCard()" id="nextBtn">➡</button>
   </div>
-</div>
-
-
-<!-- Menu Buttons -->
-<div class="bottom-right">
-  <span class="icon" onclick="shuffle()">🔀</span>
-  <span class="icon" onclick="toggleFull()">⛶</span>
 </div>
 
 <script>
@@ -211,31 +199,9 @@ function updateCard() {
   document.getElementById("front").textContent = flashcards[index].q;
   document.getElementById("back").textContent = flashcards[index].a;
   document.getElementById("progress").textContent = `${index + 1} / ${flashcards.length}`;
+
   document.getElementById("prevBtn").disabled = index === 0;
   document.getElementById("nextBtn").disabled = index === flashcards.length - 1;
+
   document.getElementById("card").classList.remove("flipped");
-  flipped = false;
-}
-
-function flipCard() {
-  flipped = !flipped;
-  document.getElementById("card").classList.toggle("flipped", flipped);
-}
-
-function nextCard() { if (index < flashcards.length - 1) index++; updateCard(); }
-function prevCard() { if (index > 0) index--; updateCard(); }
-function shuffle() { index = Math.floor(Math.random()*flashcards.length); updateCard(); }
-
-function toggleFull(){
-  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-  else document.exitFullscreen();
-}
-
-function toggleTheme() {
-  document.body.classList.toggle("light");
-}
-
-updateCard();
-</script>
-</body>
-</html>
+  flipp
