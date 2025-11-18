@@ -6,176 +6,166 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ========================= THEME COLORS ========================= */
-:root {
-  --accent: #ff7b00;
-  --accent-hover: #ffb15a;
-  --bg-dark: #0f0f12;
-  --bg-light: #f4f4f7;
-  --card-dark: #1b1b23;
-  --card-light: #ffffff;
-  --text-dark: #121212;
-  --text-light: #ffffff;
+:root{
+  --accent:#ff7b00;
+  --bg-light:#f4f4f7;
+  --bg-dark:#0f0f12;
+  --text-dark:#121212;
+  --text-light:#ffffff;
+  --card-light:#ffffff;
+  --card-dark:#1b1b23;
 }
 
-/* ========================= GLOBAL ========================= */
-body {
-  margin: 0;
-  font-family: "Inter", sans-serif;
-  background: var(--bg-dark);
-  color: var(--text-light);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  transition: .35s;
-  overflow: hidden;
+/* Default = Light */ 
+body{
+  margin:0;
+  font-family:"Inter",sans-serif;
+  background:var(--bg-light);
+  color:var(--text-dark);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+  transition:.35s;
 }
 
-body.light {
-  background: var(--bg-light);
-  color: var(--text-dark);
+/* Theme Toggle Button */
+.theme-toggle{
+  position:fixed;
+  top:18px;
+  left:22px;
+  border:2px solid var(--accent);
+  color:var(--accent);
+  padding:10px 20px;
+  border-radius:14px;
+  background:transparent;
+  cursor:pointer;
+  transition:.3s;
 }
 
-/* ========================= THEME SWITCH BUTTON ========================= */
-.theme-toggle {
-  position: fixed;
-  top: 18px;
-  left: 22px;
-  border: 2px solid var(--accent);
-  color: var(--accent);
-  padding: 10px 20px;
-  border-radius: 14px;
-  font-size: 15px;
-  background: transparent;
-  cursor: pointer;
-  transition: .3s;
-}
-.theme-toggle:hover { background: var(--accent); color: black; }
-
-/* ========================= FLASHCARD ========================= */
-.card {
-  width: 85vw;
-  max-width: 950px;
-  height: 350px;
-  background: var(--card-dark);
-  border-radius: 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0px 25px 60px rgba(0,0,0,0.45);
-  cursor: pointer;
-  transition: .45s;
-  perspective: 1500px;
-  position: relative;
-  z-index: 1;
-}
-body.light .card { background: var(--card-light); }
-.card:hover { transform: scale(1.01); }
-
-.inner {
-  width: 100%;
-  height: 100%;
-  border-radius: 28px;
-  position: relative;
-  transition: transform .55s cubic-bezier(.22,.61,.36,1);
-  transform-style: preserve-3d;
+/* Flashcard */
+.card{
+  width:85vw;
+  max-width:950px;
+  height:350px;
+  background:var(--card-light);
+  border-radius:28px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  perspective:1400px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0px 25px 60px rgba(0,0,0,0.2);
 }
 
-.card.flipped .inner { transform: rotateY(180deg); }
-
-.side {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 28px;
-  backface-visibility: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 35px;
-  text-align: center;
-  font-size: clamp(18px, 2.4vw, 28px);
-  line-height: 1.4;
+.inner{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.22,.61,.36,1);
 }
 
-.back { 
-  transform: rotateY(180deg); 
-  color: var(--accent);
-  font-weight: 600;
+.card.flipped .inner{
+  transform:rotateY(180deg);
 }
 
-/* ========================= CONTROLS ========================= */
-
-.controls {
-  margin-top: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-  position: relative;
-  z-index: 10; 
+.side{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:35px;
+  text-align:center;
+  font-size: clamp(18px,2.3vw,28px);
+  line-height:1.4;
+  transition:.25s;
 }
 
-/* NEW IMPROVED BUTTONS */
-.ctrl-btn {
-  background: transparent;
-  color: var(--accent);
-  border: none;
-  font-size: 28px;
-  cursor: pointer;
-  padding: 10px 30px;
-  transition: .25s ease;
-  border-radius: 12px;
+.front{ transform:rotateY(0deg); }
+.back{ transform:rotateY(180deg); color:var(--accent); font-weight:bold; }
 
-  min-width: 70px;
-  min-height: 50px;
+/* FIX: hide inactive face */
+.card:not(.flipped) .back{ opacity:0; pointer-events:none; }
+.card.flipped .front{ opacity:0; pointer-events:none; }
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Controls */
+.controls{
+  margin-top:32px;
+  display:flex;
+  gap:24px;
+  justify-content:center;
 }
 
-/* Hover + Glow */
-.ctrl-btn:hover {
-  background: rgba(255,123,0,0.12);
-  box-shadow: 0px 0px 14px rgba(255,123,0,0.35);
-  transform: scale(1.15);
+.ctrl-btn{
+  background:transparent;
+  border:none;
+  font-size:28px;
+  cursor:pointer;
+  color:var(--accent);
+  padding:10px 30px;
+  border-radius:12px;
+  transition:.25s;
 }
 
-/* Press Feedback */
-.ctrl-btn:active {
-  transform: scale(0.92);
-  opacity: .6;
+.ctrl-btn:hover{
+  background:rgba(255,123,0,0.15);
+  transform:scale(1.18);
 }
 
-/* Disabled State */
-.ctrl-btn:disabled {
-  opacity: .18; 
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+.ctrl-btn:disabled{
+  opacity:.25;
+  cursor:not-allowed;
 }
 
-/* Counter Center */
-.counter {
-  font-size: 14px;
-  opacity: .5;
-  width: 70px;
-  text-align: center;
+.counter{
+  opacity:.65;
+  font-size:14px;
+  width:80px;
+  text-align:center;
+}
+
+/* ======================
+   DARK THEME FIX
+   ====================== */
+body.dark{
+  background:var(--bg-dark);
+  color:var(--text-light);
+}
+
+body.dark .card{
+  background:var(--card-dark);
+  color:var(--text-light);
+  box-shadow:0px 25px 60px rgba(255,255,255,0.05);
+}
+
+body.dark .back{
+  color:var(--accent);
+}
+
+body.dark .ctrl-btn{
+  color:var(--accent);
+}
+
+body.dark .ctrl-btn:hover{
+  background:rgba(255,123,0,0.25);
 }
 </style>
 </head>
 
-<body class="light">
+<body>
 
 <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
 <div>
   <div class="card" id="card" onclick="flipCard()">
     <div class="inner">
-      <div class="side front" id="front">Loading...</div>
+      <div class="side front" id="front"></div>
       <div class="side back" id="back"></div>
     </div>
   </div>
@@ -188,69 +178,40 @@ body.light .card { background: var(--card-light); }
 </div>
 
 <script>
-/* ================= FLASHCARD DATA ================= */
+/* ------- Flashcards Content Here (Bank Example) -------- */
 const flashcards = [
-  {
-    q: "What are the three core goals authentication should support?",
-    a: "Confidentiality, Integrity, and Availability."
-  },
-  {
-    q: "Give examples of 'Something You Know' authentication factors.",
-    a: "Password or PIN."
-  },
-  {
-    q: "What is MFA?",
-    a: "Using two or more authentication factors, such as something you know + something you have."
-  },
-  {
-    q: "What is the difference between False Acceptance Rate (FAR) and False Rejection Rate (FRR)?",
-    a: "FAR = system accepts impostors. FRR = system rejects legitimate users."
-  },
-  {
-    q: "What is an example of a hard authentication token?",
-    a: "Smart card, OTP fob, or FIDO U2F key."
-  },
-  {
-    q: "What is passwordless authentication?",
-    a: "Authentication without passwords, using authenticators with public/private key pairs."
-  },
-  {
-    q: "What is Discretionary Access Control (DAC)?",
-    a: "Access control based on resource ownership and Access Control Lists (ACLs)."
-  },
-  {
-    q: "What is the Principle of Least Privilege?",
-    a: "Users receive only the minimal permissions needed to perform their tasks."
-  },
-  {
-    q: "What is the purpose of provisioning and deprovisioning?",
-    a: "Provisioning sets accounts and access; deprovisioning removes access when roles change or users leave."
-  },
-  {
-    q: "What is federation in identity management?",
-    a: "Organizations share authentication identities across separate administrative networks."
-  }
+{ q:"What is Access Control?", a:"Restricting who can access which resources." },
+{ q:"What is MAC?", a:"Mandatory Access Control — system-enforced restrictions." },
+{ q:"What is RBAC?", a:"Role-Based Access Control — permissions based on role." },
+{ q:"What is ABAC?", a:"Attribute-Based Access Control — rules based on attributes." },
+{ q:"What is Least Privilege?", a:"Users receive only the access necessary." },
+{ q:"What is Separation of Duties?", a:"Critical tasks require more than one person." },
+{ q:"What is Zero Trust?", a:"Never trust — always verify." },
+{ q:"What is Access Review?", a:"Routine evaluation of user permissions." },
+{ q:"What is Auditing?", a:"Tracking access and policy compliance." },
+{ q:"What is Policy Enforcement?", a:"Ensuring security rules are consistently applied." }
 ];
 
 
+let index=0, flipped=false;
 
-let index = 0, flipped = false;
-
-function updateCard() {
-  front.innerHTML = flashcards[index].q;
-  back.innerHTML = flashcards[index].a;
-  progress.innerHTML = `${index+1} / ${flashcards.length}`;
-  prevBtn.disabled = index === 0;
-  nextBtn.disabled = index === flashcards.length - 1;
+function updateCard(){
+  front.innerHTML=flashcards[index].q;
+  back.innerHTML=flashcards[index].a;
+  progress.textContent=`${index+1}/${flashcards.length}`;
+  prevBtn.disabled=index===0;
+  nextBtn.disabled=index===flashcards.length-1;
   card.classList.remove("flipped");
-  flipped = false;
+  flipped=false;
 }
 
-function flipCard(){ flipped = !flipped; card.classList.toggle("flipped", flipped); }
-function nextCard(){ if(index < flashcards.length-1) index++; updateCard(); }
-function prevCard(){ if(index > 0) index--; updateCard(); }
+function flipCard(){ flipped=!flipped; card.classList.toggle("flipped",flipped); }
 
-function toggleTheme(){ document.body.classList.toggle("light"); }
+function nextCard(){ if(index<flashcards.length-1) index++; updateCard(); }
+
+function prevCard(){ if(index>0) index--; updateCard(); }
+
+function toggleTheme(){ document.body.classList.toggle("dark"); }
 
 updateCard();
 </script>
