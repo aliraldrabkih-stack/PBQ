@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Flashcards</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ========================= THEME COLORS ========================= */
+:root {
+  --accent: #ff7b00;
+  --accent-hover: #ffb15a;
+  --bg-dark: #0f0f12;
+  --bg-light: #f4f4f7;
+  --card-dark: #1b1b23;
+  --card-light: #ffffff;
+  --text-dark: #121212;
+  --text-light: #ffffff;
+}
+
+/* ========================= GLOBAL ========================= */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  transition: .35s;
+  overflow: hidden;
+}
+
+body.light {
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+/* ========================= THEME SWITCH BUTTON ========================= */
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  left: 22px;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  padding: 10px 20px;
+  border-radius: 14px;
+  font-size: 15px;
+  background: transparent;
+  cursor: pointer;
+  transition: .3s;
+}
+.theme-toggle:hover { background: var(--accent); color: black; }
+
+/* ========================= FLASHCARD ========================= */
+.card {
+  width: 85vw;
+  max-width: 950px;
+  height: 350px;
+  background: var(--card-dark);
+  border-radius: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 25px 60px rgba(0,0,0,0.45);
+  cursor: pointer;
+  transition: .45s;
+  perspective: 1500px;
+  position: relative;
+  z-index: 1;
+}
+body.light .card { background: var(--card-light); }
+.card:hover { transform: scale(1.01); }
+
+.inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  position: relative;
+  transition: transform .55s cubic-bezier(.22,.61,.36,1);
+  transform-style: preserve-3d;
+}
+
+.card.flipped .inner { transform: rotateY(180deg); }
+
+.side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 35px;
+  text-align: center;
+  font-size: clamp(18px, 2.4vw, 28px);
+  line-height: 1.4;
+}
+
+.back { 
+  transform: rotateY(180deg); 
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ========================= CONTROLS ========================= */
+
+.controls {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  position: relative;
+  z-index: 10; 
+}
+
+/* NEW IMPROVED BUTTONS */
+.ctrl-btn {
+  background: transparent;
+  color: var(--accent);
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 10px 30px;
+  transition: .25s ease;
+  border-radius: 12px;
+
+  min-width: 70px;
+  min-height: 50px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Hover + Glow */
+.ctrl-btn:hover {
+  background: rgba(255,123,0,0.12);
+  box-shadow: 0px 0px 14px rgba(255,123,0,0.35);
+  transform: scale(1.15);
+}
+
+/* Press Feedback */
+.ctrl-btn:active {
+  transform: scale(0.92);
+  opacity: .6;
+}
+
+/* Disabled State */
+.ctrl-btn:disabled {
+  opacity: .18; 
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Counter Center */
+.counter {
+  font-size: 14px;
+  opacity: .5;
+  width: 70px;
+  text-align: center;
+}
+</style>
+</head>
+
+<body class="light">
+
+<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+<div>
+  <div class="card" id="card" onclick="flipCard()">
+    <div class="inner">
+      <div class="side front" id="front">Loading...</div>
+      <div class="side back" id="back"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn" onclick="prevCard()" id="prevBtn">⬅</button>
+    <span class="counter" id="progress"></span>
+    <button class="ctrl-btn" onclick="nextCard()" id="nextBtn">➡</button>
+  </div>
+</div>
+
+<script>
+/* ================= FLASHCARD DATA ================= */
+const flashcards = [
+  {q:"What is a threat actor?", a:"Any person or group posing cybersecurity risk."},
+  {q:"What differentiates internal from external threat actors?", a:"Internal actors have authorized access; external do not."},
+  {q:"Who are script kiddies?", a:"Low-skilled attackers using pre-made tools."},
+  {q:"What motivates hacktivists?", a:"Political or social agendas."},
+  {q:"What are nation-state actors known for?", a:"Sophisticated long-term attacks backed by governments."},
+  {q:"What is an APT?", a:"Advanced Persistent Threat—long term targeted attack."},
+  {q:"What defines organized crime actors?", a:"Profit-driven, well-funded cybercriminal groups."},
+  {q:"What is insider threat?", a:"Threat from someone with legitimate access."},
+  {q:"Define attack surface.", a:"All possible entry points an attacker can exploit."},
+  {q:"What is phishing?", a:"Tricking users into sharing sensitive info through fake communication."}
+];
+
+
+let index = 0, flipped = false;
+
+function updateCard() {
+  front.innerHTML = flashcards[index].q;
+  back.innerHTML = flashcards[index].a;
+  progress.innerHTML = `${index+1} / ${flashcards.length}`;
+  prevBtn.disabled = index === 0;
+  nextBtn.disabled = index === flashcards.length - 1;
+  card.classList.remove("flipped");
+  flipped = false;
+}
+
+function flipCard(){ flipped = !flipped; card.classList.toggle("flipped", flipped); }
+function nextCard(){ if(index < flashcards.length-1) index++; updateCard(); }
+function prevCard(){ if(index > 0) index--; updateCard(); }
+
+function toggleTheme(){ document.body.classList.toggle("light"); }
+
+updateCard();
+</script>
+</body>
+</html>
