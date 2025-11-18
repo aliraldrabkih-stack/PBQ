@@ -2,180 +2,140 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Flashcards</title>
+<title>Flashcards Bank</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ========================= THEME COLORS ========================= */
 :root {
-  --accent: #ff7b00;
-  --accent-hover: #ffb15a;
-  --bg-dark: #0f0f12;
-  --bg-light: #f4f4f7;
-  --card-dark: #1b1b23;
-  --card-light: #ffffff;
-  --text-dark: #121212;
-  --text-light: #ffffff;
+  --accent:#ff7b00;
+  --bg-light:#f4f4f7;
+  --text-dark:#121212;
+  --card-light:#ffffff;
 }
 
-/* ========================= GLOBAL ========================= */
+/* Default = Light Mode */
 body {
-  margin: 0;
-  font-family: "Inter", sans-serif;
-  background: var(--bg-dark);
-  color: var(--text-light);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  transition: .35s;
-  overflow: hidden;
+  margin:0;
+  font-family:"Inter",sans-serif;
+  background:var(--bg-light);
+  color:var(--text-dark);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+  transition:.35s;
 }
 
-body.light {
-  background: var(--bg-light);
-  color: var(--text-dark);
-}
-
-/* ========================= THEME SWITCH BUTTON ========================= */
 .theme-toggle {
-  position: fixed;
-  top: 18px;
-  left: 22px;
-  border: 2px solid var(--accent);
-  color: var(--accent);
-  padding: 10px 20px;
-  border-radius: 14px;
-  font-size: 15px;
-  background: transparent;
-  cursor: pointer;
-  transition: .3s;
+  position:fixed;
+  top:18px;
+  left:22px;
+  border:2px solid var(--accent);
+  color:var(--accent);
+  padding:10px 20px;
+  border-radius:14px;
+  background:transparent;
+  cursor:pointer;
 }
-.theme-toggle:hover { background: var(--accent); color: black; }
 
-/* ========================= FLASHCARD ========================= */
 .card {
-  width: 85vw;
-  max-width: 950px;
-  height: 350px;
-  background: var(--card-dark);
-  border-radius: 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0px 25px 60px rgba(0,0,0,0.45);
-  cursor: pointer;
-  transition: .45s;
-  perspective: 1500px;
-  position: relative;
-  z-index: 1;
+  width:85vw;
+  max-width:950px;
+  height:350px;
+  background:var(--card-light);
+  border-radius:28px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  perspective:1400px;
+  position:relative;
+  box-shadow:0px 25px 60px rgba(0,0,0,0.25);
 }
-body.light .card { background: var(--card-light); }
-.card:hover { transform: scale(1.01); }
 
+/* FIXED FLIP LOGIC (NO OVERLAP) */
 .inner {
-  width: 100%;
-  height: 100%;
-  border-radius: 28px;
-  position: relative;
-  transition: transform .55s cubic-bezier(.22,.61,.36,1);
-  transform-style: preserve-3d;
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.22,.61,.36,1);
 }
 
-.card.flipped .inner { transform: rotateY(180deg); }
+.card.flipped .inner {
+  transform: rotateY(180deg);
+}
 
 .side {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 28px;
-  backface-visibility: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 35px;
-  text-align: center;
-  font-size: clamp(18px, 2.4vw, 28px);
-  line-height: 1.4;
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:35px;
+  text-align:center;
+  font-size: clamp(18px,2.4vw,28px);
+  line-height:1.4;
 }
 
-.back { 
-  transform: rotateY(180deg); 
-  color: var(--accent);
-  font-weight: 600;
+.front {
+  transform: rotateY(0deg);
 }
 
-/* ========================= CONTROLS ========================= */
+.back {
+  transform: rotateY(180deg);
+  color:var(--accent);
+  font-weight:bold;
+}
 
 .controls {
-  margin-top: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-  position: relative;
-  z-index: 10; 
+  margin-top:32px;
+  display:flex;
+  gap:24px;
+  justify-content:center;
+  z-index:10;
 }
 
-/* NEW IMPROVED BUTTONS */
 .ctrl-btn {
-  background: transparent;
-  color: var(--accent);
-  border: none;
-  font-size: 28px;
-  cursor: pointer;
-  padding: 10px 30px;
-  transition: .25s ease;
-  border-radius: 12px;
-
-  min-width: 70px;
-  min-height: 50px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background:transparent;
+  color:var(--accent);
+  border:none;
+  font-size:28px;
+  cursor:pointer;
+  padding:10px 30px;
+  border-radius:12px;
+  transition:.25s;
 }
 
-/* Hover + Glow */
 .ctrl-btn:hover {
-  background: rgba(255,123,0,0.12);
-  box-shadow: 0px 0px 14px rgba(255,123,0,0.35);
-  transform: scale(1.15);
+  background:rgba(255,123,0,0.15);
+  transform:scale(1.15);
 }
 
-/* Press Feedback */
-.ctrl-btn:active {
-  transform: scale(0.92);
-  opacity: .6;
-}
-
-/* Disabled State */
 .ctrl-btn:disabled {
-  opacity: .18; 
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+  opacity:.25;
+  cursor:not-allowed;
 }
 
-/* Counter Center */
 .counter {
-  font-size: 14px;
-  opacity: .5;
-  width: 70px;
-  text-align: center;
+  opacity:.6;
+  font-size:14px;
+  width:70px;
+  text-align:center;
 }
 </style>
 </head>
 
-<body class="light">
+<body>
 
-<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+<button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
 
 <div>
   <div class="card" id="card" onclick="flipCard()">
     <div class="inner">
-      <div class="side front" id="front">Loading...</div>
+      <div class="side front" id="front"></div>
       <div class="side back" id="back"></div>
     </div>
   </div>
@@ -188,37 +148,41 @@ body.light .card { background: var(--card-light); }
 </div>
 
 <script>
-/* ================= FLASHCARD DATA ================= */
-const flashcards = [
-  {q:"What are the four main principles of InfoSec?", a:"Confidentiality, Integrity, Availability, Non-repudiation."},
-  {q:"What does authentication mean?", a:"Verifying a user’s identity."},
-  {q:"What does authorization mean?", a:"Determining what the user can access."},
-  {q:"What is non-repudiation?", a:"Ensuring actions cannot be denied later."},
-  {q:"Give a preventive control.", a:"MFA, firewall, access restrictions."},
-  {q:"Detective controls do what?", a:"Detect attacks during execution."},
-  {q:"Corrective controls do what?", a:"Fix/restore after an incident."},
-  {q:"SOC stands for?", a:"Security Operations Center."},
-  {q:"What is DevSecOps?", a:"Security integrated into development."},
-  {q:"CIA stands for?", a:"Confidentiality • Integrity • Availability."}
+/* ---- BANK CONTENT ---- */
+const flashcards=[
+{q:"What is a threat actor?",a:"A person or group posing a cybersecurity risk."},
+{q:"What are script kiddies?",a:"Low-skill attackers using premade tools."},
+{q:"What motivates Hacktivists?",a:"Political or social agendas."},
+{q:"What is an insider threat?",a:"Threat from someone with legitimate access."},
+{q:"What is an APT?",a:"Advanced Persistent Threat — long term targeted attack."},
+{q:"Who are nation-state actors?",a:"Government-backed sophisticated attackers."},
+{q:"What is phishing?",a:"Tricking users to disclose sensitive data."},
+{q:"What is ransomware?",a:"Malware that encrypts files until a ransom is paid."},
+{q:"Define Attack Surface.",a:"All possible entry points an attacker may exploit."},
+{q:"What is social engineering?",a:"Manipulating humans to bypass security mechanisms."}
 ];
 
-let index = 0, flipped = false;
+let index=0, flipped=false;
 
-function updateCard() {
-  front.innerHTML = flashcards[index].q;
-  back.innerHTML = flashcards[index].a;
-  progress.innerHTML = `${index+1} / ${flashcards.length}`;
-  prevBtn.disabled = index === 0;
-  nextBtn.disabled = index === flashcards.length - 1;
+function updateCard(){
+  front.innerHTML=flashcards[index].q;
+  back.innerHTML=flashcards[index].a;
+  progress.innerHTML=`${index+1}/${flashcards.length}`;
+  prevBtn.disabled=index===0;
+  nextBtn.disabled=index===flashcards.length-1;
   card.classList.remove("flipped");
-  flipped = false;
+  flipped=false;
 }
 
-function flipCard(){ flipped = !flipped; card.classList.toggle("flipped", flipped); }
-function nextCard(){ if(index < flashcards.length-1) index++; updateCard(); }
-function prevCard(){ if(index > 0) index--; updateCard(); }
+function flipCard(){ flipped=!flipped; card.classList.toggle("flipped",flipped); }
+function nextCard(){ if(index<flashcards.length-1) index++; updateCard(); }
+function prevCard(){ if(index>0) index--; updateCard(); }
 
-function toggleTheme(){ document.body.classList.toggle("light"); }
+function toggleTheme(){
+  document.body.classList.toggle("light");
+  document.querySelector(".theme-toggle").textContent =
+  document.body.classList.contains("light") ? "🌙 Dark Mode" : "☀️ Light Mode";
+}
 
 updateCard();
 </script>
