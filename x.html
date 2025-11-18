@@ -11,12 +11,12 @@
   --bg-light:#f4f4f7;
   --bg-dark:#0f0f12;
   --text-dark:#121212;
-  --text-light:#fff;
-  --card-light:#fff;
+  --text-light:#ffffff;
+  --card-light:#ffffff;
   --card-dark:#1b1b23;
 }
 
-/* Default = Light */
+/* Default = Light */ 
 body{
   margin:0;
   font-family:"Inter",sans-serif;
@@ -26,12 +26,11 @@ body{
   justify-content:center;
   align-items:center;
   height:100vh;
-  transition:.3s;
+  overflow:hidden;
+  transition:.35s;
 }
 
-.light body { background:var(--bg-light); }
-
-/* Theme Button */
+/* Theme Toggle Button */
 .theme-toggle{
   position:fixed;
   top:18px;
@@ -42,9 +41,10 @@ body{
   border-radius:14px;
   background:transparent;
   cursor:pointer;
+  transition:.3s;
 }
 
-/* Flashcard Container */
+/* Flashcard */
 .card{
   width:85vw;
   max-width:950px;
@@ -56,12 +56,11 @@ body{
   align-items:center;
   cursor:pointer;
   perspective:1400px;
-  box-shadow:0px 25px 60px rgba(0,0,0,0.2);
   position:relative;
   overflow:hidden;
+  box-shadow:0px 25px 60px rgba(0,0,0,0.2);
 }
 
-/* Flip System */
 .inner{
   width:100%;
   height:100%;
@@ -74,7 +73,6 @@ body{
   transform:rotateY(180deg);
 }
 
-/* Front + Back */
 .side{
   position:absolute;
   inset:0;
@@ -83,31 +81,20 @@ body{
   justify-content:center;
   align-items:center;
   padding:35px;
-  font-size: clamp(18px, 2.3vw, 28px);
   text-align:center;
+  font-size: clamp(18px,2.3vw,28px);
   line-height:1.4;
   transition:.25s;
 }
 
 .front{ transform:rotateY(0deg); }
-.back{
-  transform:rotateY(180deg);
-  font-weight:bold;
-  color:var(--accent);
-}
+.back{ transform:rotateY(180deg); color:var(--accent); font-weight:bold; }
 
-/* 🔥 FIX: Hide the side not visible */
-.card:not(.flipped) .back{
-  opacity:0;
-  pointer-events:none;
-}
+/* FIX: hide inactive face */
+.card:not(.flipped) .back{ opacity:0; pointer-events:none; }
+.card.flipped .front{ opacity:0; pointer-events:none; }
 
-.card.flipped .front{
-  opacity:0;
-  pointer-events:none;
-}
-
-/* Navigation */
+/* Controls */
 .controls{
   margin-top:32px;
   display:flex;
@@ -122,32 +109,58 @@ body{
   cursor:pointer;
   color:var(--accent);
   padding:10px 30px;
+  border-radius:12px;
   transition:.25s;
 }
 
 .ctrl-btn:hover{
-  transform:scale(1.2);
   background:rgba(255,123,0,0.15);
-  border-radius:10px;
+  transform:scale(1.18);
 }
 
 .ctrl-btn:disabled{
-  opacity:.3;
+  opacity:.25;
   cursor:not-allowed;
 }
 
 .counter{
-  opacity:.6;
+  opacity:.65;
   font-size:14px;
-  width:70px;
+  width:80px;
   text-align:center;
+}
+
+/* ======================
+   DARK THEME FIX
+   ====================== */
+body.dark{
+  background:var(--bg-dark);
+  color:var(--text-light);
+}
+
+body.dark .card{
+  background:var(--card-dark);
+  color:var(--text-light);
+  box-shadow:0px 25px 60px rgba(255,255,255,0.05);
+}
+
+body.dark .back{
+  color:var(--accent);
+}
+
+body.dark .ctrl-btn{
+  color:var(--accent);
+}
+
+body.dark .ctrl-btn:hover{
+  background:rgba(255,123,0,0.25);
 }
 </style>
 </head>
 
 <body>
 
-<button class="theme-toggle" onclick="toggleTheme()">🌙 Mode</button>
+<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
 <div>
   <div class="card" id="card" onclick="flipCard()">
@@ -165,39 +178,39 @@ body{
 </div>
 
 <script>
-/* ---- Replace this array with other banks if needed ---- */
-const flashcards = [
-  {q:"What are the four main principles of InfoSec?", a:"Confidentiality, Integrity, Availability, Non-repudiation."},
-  {q:"What does authentication mean?", a:"Verifying a user’s identity."},
-  {q:"What does authorization mean?", a:"Determining what the user can access."},
-  {q:"What is non-repudiation?", a:"Ensuring actions cannot be denied later."},
-  {q:"Give a preventive control.", a:"MFA, firewall, access restrictions."},
-  {q:"Detective controls do what?", a:"Detect attacks during execution."},
-  {q:"Corrective controls do what?", a:"Fix/restore after an incident."},
-  {q:"SOC stands for?", a:"Security Operations Center."},
-  {q:"What is DevSecOps?", a:"Security integrated into development."},
-  {q:"CIA stands for?", a:"Confidentiality • Integrity • Availability."}
+/* ------- Flashcards Content Here (Bank Example) -------- */
+const flashcards=[
+{q:"What is a threat actor?",a:"A person or group that may cause harm to systems or data."},
+{q:"What are script kiddies?",a:"Unskilled attackers using pre-made tools."},
+{q:"Who are hacktivists?",a:"Attackers motivated by political or social beliefs."},
+{q:"What is an insider threat?",a:"A risk from someone with authorized access."},
+{q:"What is an APT?",a:"Advanced Persistent Threat — long-term targeted attack."},
+{q:"Who are nation-state actors?",a:"Highly skilled groups backed by governments."},
+{q:"What is phishing?",a:"A scam to trick victims into revealing sensitive info."},
+{q:"What is ransomware?",a:"Malware that encrypts data until ransom is paid."},
+{q:"Define attack surface.",a:"All possible points an attacker can exploit."},
+{q:"What is social engineering?",a:"Manipulating people to bypass security controls."}
 ];
 
 let index=0, flipped=false;
 
 function updateCard(){
-  document.getElementById("front").innerHTML=flashcards[index].q;
-  document.getElementById("back").innerHTML=flashcards[index].a;
-  document.getElementById("progress").textContent=`${index+1}/${flashcards.length}`;
-  document.getElementById("prevBtn").disabled=index===0;
-  document.getElementById("nextBtn").disabled=index===flashcards.length-1;
-  document.getElementById("card").classList.remove("flipped");
+  front.innerHTML=flashcards[index].q;
+  back.innerHTML=flashcards[index].a;
+  progress.textContent=`${index+1}/${flashcards.length}`;
+  prevBtn.disabled=index===0;
+  nextBtn.disabled=index===flashcards.length-1;
+  card.classList.remove("flipped");
   flipped=false;
 }
 
-function flipCard(){ flipped=!flipped; document.getElementById("card").classList.toggle("flipped",flipped); }
+function flipCard(){ flipped=!flipped; card.classList.toggle("flipped",flipped); }
+
 function nextCard(){ if(index<flashcards.length-1) index++; updateCard(); }
+
 function prevCard(){ if(index>0) index--; updateCard(); }
 
-function toggleTheme(){
-  document.body.classList.toggle("dark");
-}
+function toggleTheme(){ document.body.classList.toggle("dark"); }
 
 updateCard();
 </script>
