@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What is context manipulation in an AI-enabled application?
+    (A) Upgrading the model's hardware
+    (B) Deliberately shaping what enters the model's context window to influence later responses
+    (C) Changing the application's colour theme
+    (D) Restarting the application server
+
+Q2. Why is cross-user data exposure a critical risk in multi-tenant AI applications?
+    (A) It only affects the application's billing system
+    (B) Poor session isolation can leak one user's context or data into another user's conversation
+    (C) It has no meaningful security relevance
+    (D) It only affects offline batch processing jobs
+
+Q3. Where must access control be enforced to prevent unauthorised context or document retrieval?
+    (A) Only at the user interface layer
+    (B) At the point where context or documents are assembled, not only the UI
+    (C) Only in the marketing website
+    (D) Access control is not relevant to AI context
+
+Q4. What does the principle of data minimisation aim to achieve in AI systems?
+    (A) Reduce the model's response length
+    (B) Reduce what could be exposed if a leakage vulnerability is exploited, by only passing needed data into context
+    (C) Increase the amount of training data used
+    (D) Reduce the number of users who can access the system
+
+Q5. Which lab in the AI Security Practitioner syllabus aligns with this module's practical skills?
+    (A) Malicious Third-Party Integration
+    (B) Context Manipulation & Sensitive Data Exposure
+    (C) Adversarial Input Generation & Model Manipulation
+    (D) AI Practitioner Capstone
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (B) Deliberately shaping what enters the model's context window to influence later responses
+Q2: (B) Poor session isolation can leak one user's context or data into another user's conversation
+Q3: (B) At the point where context or documents are assembled, not only the UI
+Q4: (B) Reduce what could be exposed if a leakage vulnerability is exploited, by only passing needed data into context
+Q5: (B) Context Manipulation & Sensitive Data Exposure
+==================================================

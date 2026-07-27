@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 5 Cheat Sheet — AI Application Security &amp; Backend Exposure</title>
+</head>
+<body style="margin:0">
+<div style="width:1600px;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0c0d10;background-image:radial-gradient(1000px 600px at -10% -20%, rgba(255,106,0,.20), transparent 50%);color:#f5f7fb;padding:36px;box-sizing:border-box;border:1px solid #2a2f3a">
+
+  <div style="text-align:center;margin-bottom:22px">
+    <h1 style="margin:0;font-size:34px;font-weight:900;letter-spacing:.3px">AI Security Practitioner: <span style="color:#ff6a00">AI Application Security &amp; Backend Exposure</span></h1>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:auto auto auto;grid-template-areas:'s1 s2 s3' 's1 s4 s4' 's5 s6 s6';gap:16px">
+
+    <div style="grid-area:s1;border:1px solid #2a2f3a;border-radius:14px;padding:20px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:16px;letter-spacing:.5px;margin-bottom:14px">SECTION 1: CORE RISK</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;line-height:1.45">
+        <div>🔌 <strong>Backend exposure</strong> — every AI-to-backend connection is a potential path to unauthorised access</div>
+        <div>📤 <strong>Improper output handling</strong> — acting on model output without validation inherits its failure modes</div>
+        <div>📁 <strong>Unsafe file access</strong> — AI file tools can be manipulated beyond their intended scope</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s2;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 2: KEY PRINCIPLES</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.4;color:#dfe3ea">
+        <div>🚧 Treat every API param as potentially attacker-influenced</div>
+        <div>✅ Server-side validation must not trust the AI layer</div>
+        <div>🧹 Filter both input and output</div>
+        <div>📝 Log prompts, tool calls, and backend actions</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s3;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 3: TESTING WORKFLOW</div>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;line-height:1.4;color:#dfe3ea">
+        <div>1️⃣ Map every backend system the AI layer can reach</div>
+        <div>2️⃣ Test for backend data exposure</div>
+        <div>3️⃣ Assess isolation between AI and application layers</div>
+        <div>4️⃣ Recommend allow-listing, sandboxing, validation</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s4;border:1px solid #b85100;border-radius:14px;padding:18px;background:rgba(255,106,0,.06)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 4: MITIGATIONS</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr><th style="text-align:left;padding:6px 8px;background:rgba(255,106,0,.18);border-bottom:1px solid #b85100">Control</th><th style="text-align:left;padding:6px 8px;background:rgba(255,106,0,.18);border-bottom:1px solid #b85100">Purpose</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#ffd9bf;font-weight:700">Allow-listing</td><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#dfe3ea">Restrict the AI layer to explicitly permitted actions</td></tr>
+          <tr><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#ffd9bf;font-weight:700">Sandboxing</td><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#dfe3ea">Contain file/tool access within a restricted scope</td></tr>
+          <tr><td style="padding:6px 8px;color:#ffd9bf;font-weight:700">Output validation</td><td style="padding:6px 8px;color:#dfe3ea">Check model output before it reaches any backend system</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="grid-area:s5;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 5: AI-GENERATED ACTIONS</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;line-height:1.4;color:#dfe3ea">
+        <div>When a model can trigger real backend actions (send email, update record, issue refund), a manipulated prompt causes real-world consequences</div>
+        <div>API trust boundary: treat AI-supplied parameters as attacker-controlled</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s6;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 6: RESPONSIBLE PRACTICE</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13.5px;line-height:1.4;color:#dfe3ea">
+        <div>✅ Use synthetic test data and accounts</div>
+        <div>✅ Test only within agreed scope</div>
+        <div>✅ Never trigger real destructive backend actions</div>
+        <div>✅ Document exactly which backend path was exposed</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:14px;border-top:1px solid #2a2f3a;font-size:12.5px;color:#8891a1">
+    <div>AI Security Practitioner — Module 5: AI Application Security &amp; Backend Exposure | My Cyber Academy</div>
+    <div style="font-weight:900;letter-spacing:2px"><span style="color:#ff6a00">CYBER</span> <span style="color:#f5f7fb">ACADEMY</span></div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What best distinguishes Machine Learning (ML) from the broader field of Artificial Intelligence (AI)?
+    (A) ML systems learn patterns from data rather than following explicit rules
+    (B) ML only refers to generative text models
+    (C) ML and AI are identical terms with no distinction
+    (D) ML systems cannot be used in production applications
+
+Q2. Why do traditional input validation controls often fail to fully constrain an LLM application's input?
+    (A) LLMs do not accept text input
+    (B) Natural language input cannot be fully enumerated or pattern-matched like structured fields
+    (C) LLMs only accept numeric input
+    (D) Input validation is unnecessary for AI systems
+
+Q3. In LLM application architecture, what is the primary role of the application layer sitting between the user and the model?
+    (A) Storing the model's training data permanently
+    (B) Orchestration, guardrails, and session state management
+    (C) Rendering the model's raw weights to the user
+    (D) Replacing the need for a system prompt
+
+Q4. What is a trust boundary in the context of an AI-enabled application?
+    (A) The model's maximum context length in tokens
+    (B) The point where data moves from a less trusted context into a more trusted one
+    (C) The API rate limit imposed on the application
+    (D) The physical server hosting the model
+
+Q5. Which of the following is an AI-specific attack surface introduced by connecting an LLM to external tools and plugins?
+    (A) SQL injection in a legacy login form
+    (B) Tool, plugin, and agent invocation
+    (C) Physical theft of a server rack
+    (D) Weak Wi-Fi encryption on an office network
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (A) ML systems learn patterns from data rather than following explicit rules
+Q2: (B) Natural language input cannot be fully enumerated or pattern-matched like structured fields
+Q3: (B) Orchestration, guardrails, and session state management
+Q4: (B) The point where data moves from a less trusted context into a more trusted one
+Q5: (B) Tool, plugin, and agent invocation
+==================================================

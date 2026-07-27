@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 7 Cheat Sheet — Third-Party, Tool &amp; Agent Security</title>
+</head>
+<body style="margin:0">
+<div style="width:1600px;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0c0d10;background-image:radial-gradient(1000px 600px at -10% -20%, rgba(255,106,0,.20), transparent 50%);color:#f5f7fb;padding:36px;box-sizing:border-box;border:1px solid #2a2f3a">
+
+  <div style="text-align:center;margin-bottom:22px">
+    <h1 style="margin:0;font-size:34px;font-weight:900;letter-spacing:.3px">AI Security Practitioner: <span style="color:#ff6a00">Third-Party, Tool &amp; Agent Security</span></h1>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:auto auto auto;grid-template-areas:'s1 s2 s3' 's1 s4 s4' 's5 s6 s6';gap:16px">
+
+    <div style="grid-area:s1;border:1px solid #2a2f3a;border-radius:14px;padding:20px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:16px;letter-spacing:.5px;margin-bottom:14px">SECTION 1: CORE CONCEPTS</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;line-height:1.45">
+        <div>🔧 <strong>Tool use</strong> — the model calls a discrete function to act or retrieve data</div>
+        <div>📞 <strong>Function calling</strong> — the mechanism: structured call → execution → result returned</div>
+        <div>🤖 <strong>Agentic workflow</strong> — autonomous planning and chaining of multiple tool calls</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s2;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 2: KEY RISKS</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.4;color:#dfe3ea">
+        <div>🔌 Plugin/connector supply chain exposure</div>
+        <div>🔓 Unsafe (over-broad) permissions</div>
+        <div>⚙️ Tool and API action abuse</div>
+        <div>🔗 Compounding risk across chained agent steps</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s3;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 3: TESTING WORKFLOW</div>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;line-height:1.4;color:#dfe3ea">
+        <div>1️⃣ Review each connected tool/plugin's trust level</div>
+        <div>2️⃣ Attempt unintended agent action chains within scope</div>
+        <div>3️⃣ Compare granted permissions to actual need</div>
+        <div>4️⃣ Recommend least-privilege scoping</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s4;border:1px solid #b85100;border-radius:14px;padding:18px;background:rgba(255,106,0,.06)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 4: ZERO TRUST FOR AI INTEGRATIONS</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr><th style="text-align:left;padding:6px 8px;background:rgba(255,106,0,.18);border-bottom:1px solid #b85100">Principle</th><th style="text-align:left;padding:6px 8px;background:rgba(255,106,0,.18);border-bottom:1px solid #b85100">Application</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#ffd9bf;font-weight:700">Never implicit trust</td><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#dfe3ea">A tool call is not trusted just because it came from the model</td></tr>
+          <tr><td style="padding:6px 8px;color:#ffd9bf;font-weight:700">Verify every action</td><td style="padding:6px 8px;color:#dfe3ea">Check against least-privilege policy every time, not once</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="grid-area:s5;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 5: LABS</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;line-height:1.4;color:#dfe3ea">
+        <div>Malicious Third-Party Integration — existing, medium</div>
+        <div>AI Agent Tool Abuse — proposed, hard</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s6;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 6: RESPONSIBLE PRACTICE</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13.5px;line-height:1.4;color:#dfe3ea">
+        <div>✅ Test only within agreed scope</div>
+        <div>✅ Use synthetic accounts and sandboxed tools</div>
+        <div>✅ Never trigger real destructive third-party actions</div>
+        <div>✅ Recommend least-privilege permission scoping</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:14px;border-top:1px solid #2a2f3a;font-size:12.5px;color:#8891a1">
+    <div>AI Security Practitioner — Module 7: Third-Party, Tool &amp; Agent Security | My Cyber Academy</div>
+    <div style="font-weight:900;letter-spacing:2px"><span style="color:#ff6a00">CYBER</span> <span style="color:#f5f7fb">ACADEMY</span></div>
+  </div>
+</div>
+
+</body>
+</html>

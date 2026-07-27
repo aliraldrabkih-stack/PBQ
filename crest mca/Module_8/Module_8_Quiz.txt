@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What is data poisoning?
+    (A) A model producing slower responses over time
+    (B) An attacker deliberately introducing manipulated data into a training set to bias future decisions
+    (C) A network outage during model training
+    (D) A billing dispute with a cloud provider
+
+Q2. Why does fine-tuning or updating a deployed model reopen poisoning risk?
+    (A) Update data is not always subjected to the same validation as original training data
+    (B) Fine-tuning always deletes the model entirely
+    (C) Updates never involve any new data
+    (D) Poisoning can only occur before deployment, never after
+
+Q3. What does dataset validation aim to catch?
+    (A) Slow network connections
+    (B) Poisoned or manipulated samples before they are used in training
+    (C) Grammatical errors in the model's output
+    (D) Billing anomalies in cloud usage
+
+Q4. What is model drift?
+    (A) A model's behaviour gradually diverging from its intended baseline over time
+    (B) A physical relocation of model training servers
+    (C) A type of encryption algorithm
+    (D) A change in the user interface colour scheme
+
+Q5. Which lab in the AI Security Practitioner syllabus aligns with this module's practical skills?
+    (A) AI Agent Tool Abuse
+    (B) Data Poisoning & AI Decision Manipulation
+    (C) RAG Access Control & Vector Store Exposure
+    (D) AI Red Team Reporting Scenario
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (B) An attacker deliberately introducing manipulated data into a training set to bias future decisions
+Q2: (A) Update data is not always subjected to the same validation as original training data
+Q3: (B) Poisoned or manipulated samples before they are used in training
+Q4: (A) A model's behaviour gradually diverging from its intended baseline over time
+Q5: (B) Data Poisoning & AI Decision Manipulation
+==================================================

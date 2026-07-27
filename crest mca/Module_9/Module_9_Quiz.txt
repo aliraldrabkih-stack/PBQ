@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What is model inversion?
+    (A) Flipping a model's output upside down
+    (B) A technique attempting to reconstruct training data characteristics by analysing model outputs
+    (C) Reversing a software deployment
+    (D) A billing term used by cloud providers
+
+Q2. Why does overfitting increase model leakage risk?
+    (A) A model that memorises rather than generalises is more likely to reproduce training examples verbatim
+    (B) Overfitting always improves model accuracy with no downside
+    (C) Overfitting only affects the model's training speed
+    (D) Overfitting has no relationship to leakage risk
+
+Q3. What is membership inference?
+    (A) Determining whether a specific record was part of a model's training set
+    (B) A method for adding new members to a user database
+    (C) A way to verify a user's email address
+    (D) A billing calculation for API usage
+
+Q4. Which of these is an example of an exposed model artefact?
+    (A) A publicly accessible storage bucket containing model weights
+    (B) A well-documented public API reference page
+    (C) A marketing brochure describing the product
+    (D) A customer support phone number
+
+Q5. Which lab in the AI Security Practitioner syllabus aligns with this module's practical skills?
+    (A) Adversarial Input Generation & Model Manipulation
+    (B) Model Information Leakage & Model Inversion
+    (C) Secure AI Deployment Review
+    (D) AI Practitioner Capstone
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (B) A technique attempting to reconstruct training data characteristics by analysing model outputs
+Q2: (A) A model that memorises rather than generalises is more likely to reproduce training examples verbatim
+Q3: (A) Determining whether a specific record was part of a model's training set
+Q4: (A) A publicly accessible storage bucket containing model weights
+Q5: (B) Model Information Leakage & Model Inversion
+==================================================

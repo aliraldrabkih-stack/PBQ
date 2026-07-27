@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 9 Cheat Sheet — Model Leakage, Model Inversion &amp; Privacy Risks</title>
+</head>
+<body style="margin:0">
+<div style="width:1600px;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0c0d10;background-image:radial-gradient(1000px 600px at -10% -20%, rgba(255,106,0,.20), transparent 50%);color:#f5f7fb;padding:36px;box-sizing:border-box;border:1px solid #2a2f3a">
+
+  <div style="text-align:center;margin-bottom:22px">
+    <h1 style="margin:0;font-size:34px;font-weight:900;letter-spacing:.3px">AI Security Practitioner: <span style="color:#ff6a00">Model Leakage, Model Inversion &amp; Privacy Risks</span></h1>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:auto auto auto;grid-template-areas:'s1 s2 s3' 's1 s4 s4' 's5 s6 s6';gap:16px">
+
+    <div style="grid-area:s1;border:1px solid #2a2f3a;border-radius:14px;padding:20px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:16px;letter-spacing:.5px;margin-bottom:14px">SECTION 1: CORE CONCEPTS</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;line-height:1.45">
+        <div>📤 <strong>Model information leakage</strong> — a model unintentionally revealing training data or config details</div>
+        <div>📈 <strong>Overfitting</strong> — memorising rather than generalising, increasing verbatim reproduction risk</div>
+        <div>🔍 <strong>Model inversion</strong> — reconstructing training data characteristics via output analysis</div>
+        <div>👤 <strong>Membership inference</strong> — determining whether a record was in the training set</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s2;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 2: EXPOSED ARTEFACTS</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.4;color:#dfe3ea">
+        <div>📦 Model weights/files</div>
+        <div>⚙️ Training configuration</div>
+        <div>📊 Evaluation datasets</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s3;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 3: TESTING WORKFLOW</div>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;line-height:1.4;color:#dfe3ea">
+        <div>1️⃣ Identify exposed model artefacts</div>
+        <div>2️⃣ Explain leakage risk</div>
+        <div>3️⃣ Perform controlled inversion-style analysis</div>
+        <div>4️⃣ Communicate privacy/security impact</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s4;border:1px solid #b85100;border-radius:14px;padding:18px;background:rgba(255,106,0,.06)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 4: LEAKAGE vs INVERSION vs MEMBERSHIP</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr><th style="text-align:left;padding:6px 8px;background:rgba(255,106,0,.18);border-bottom:1px solid #b85100">Technique</th><th style="text-align:left;padding:6px 8px;background:rgba(255,106,0,.18);border-bottom:1px solid #b85100">Goal</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#ffd9bf;font-weight:700">Leakage</td><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#dfe3ea">Model unintentionally reveals data or config</td></tr>
+          <tr><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#ffd9bf;font-weight:700">Inversion</td><td style="padding:6px 8px;border-bottom:1px solid #2a2f3a;color:#dfe3ea">Reconstruct training data characteristics</td></tr>
+          <tr><td style="padding:6px 8px;color:#ffd9bf;font-weight:700">Membership inference</td><td style="padding:6px 8px;color:#dfe3ea">Determine if a record was in the training set</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="grid-area:s5;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 5: PRIVACY &amp; AUTH BYPASS</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;line-height:1.4;color:#dfe3ea">
+        <div>Individuals in training data have a privacy interest in not being re-identifiable</div>
+        <div>A weak model used in identity verification can be manipulated to bypass authentication</div>
+      </div>
+    </div>
+
+    <div style="grid-area:s6;border:1px solid #2a2f3a;border-radius:14px;padding:18px;background:rgba(255,255,255,.02)">
+      <div style="color:#ff6a00;font-weight:900;font-size:15px;letter-spacing:.5px;margin-bottom:12px">SECTION 6: RESPONSIBLE PRACTICE</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13.5px;line-height:1.4;color:#dfe3ea">
+        <div>✅ Perform inversion-style testing only in a controlled lab</div>
+        <div>✅ Never target real production models without authorisation</div>
+        <div>✅ Communicate impact in plain, non-technical terms</div>
+        <div>✅ Recommend privacy-preserving training practices</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:14px;border-top:1px solid #2a2f3a;font-size:12.5px;color:#8891a1">
+    <div>AI Security Practitioner — Module 9: Model Leakage, Model Inversion &amp; Privacy Risks | My Cyber Academy</div>
+    <div style="font-weight:900;letter-spacing:2px"><span style="color:#ff6a00">CYBER</span> <span style="color:#f5f7fb">ACADEMY</span></div>
+  </div>
+</div>
+
+</body>
+</html>

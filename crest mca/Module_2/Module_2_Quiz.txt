@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What is the first step in threat modelling an AI-enabled application?
+    (A) Writing the final assessment report
+    (B) Identifying the system's assets
+    (C) Deploying the model to production
+    (D) Disabling all logging
+
+Q2. What is an "abuse case" in AI threat modelling?
+    (A) A formal legal complaint against the vendor
+    (B) A way a legitimate feature could be misused by an attacker
+    (C) A record of system uptime incidents
+    (D) A type of unit test for application code
+
+Q3. In a likelihood/impact risk matrix, a threat with high likelihood and high impact should be treated as:
+    (A) Low priority
+    (B) Immediate priority
+    (C) Irrelevant to the assessment
+    (D) Someone else's responsibility
+
+Q4. What must be defined before any AI security testing begins?
+    (A) The marketing plan for the AI product
+    (B) A safe testing plan with defined scope and forbidden actions
+    (C) The model's total parameter count
+    (D) The colour scheme of the user interface
+
+Q5. Which of these is an example of unsafe or out-of-scope testing?
+    (A) Testing with synthetic accounts and data
+    (B) Testing against live production customer data without authorisation
+    (C) Attempting an agreed, controlled prompt bypass within scope
+    (D) Documenting findings for the final report
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (B) Identifying the system's assets
+Q2: (B) A way a legitimate feature could be misused by an attacker
+Q3: (B) Immediate priority
+Q4: (B) A safe testing plan with defined scope and forbidden actions
+Q5: (B) Testing against live production customer data without authorisation
+==================================================

@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What is an evasion attack in adversarial machine learning?
+    (A) A denial-of-service attack on a network
+    (B) Small, carefully chosen perturbations to an input that cause a model to misclassify it
+    (C) A phishing email targeting model developers
+    (D) A method for encrypting model weights
+
+Q2. What is robustness testing?
+    (A) Testing how quickly a model responds to queries
+    (B) Systematically probing a model with varied and adversarial inputs to assess reliability under pressure
+    (C) A method for compressing model file size
+    (D) A billing audit for cloud AI services
+
+Q3. What must a professional AI security finding include?
+    (A) Only a list of tools used during testing
+    (B) Vulnerability, evidence, business impact, risk rating, and realistic mitigation
+    (C) The tester's personal opinion of the client
+    (D) A guarantee that the system is now fully secure
+
+Q4. What risk does confidence threshold abuse introduce in an AI identity-verification system?
+    (A) Crafted input pushed past the threshold can force an incorrect approval decision
+    (B) It always causes the system to reject all users
+    (C) It has no effect on identity verification accuracy
+    (D) It only affects the system's response time
+
+Q5. Which lab in the AI Security Practitioner syllabus is the final, multi-domain assessment covering the whole syllabus?
+    (A) Adversarial Input Generation & Model Manipulation
+    (B) AI Red Team Reporting Scenario
+    (C) AI Practitioner Capstone
+    (D) Secure AI Deployment Review
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (B) Small, carefully chosen perturbations to an input that cause a model to misclassify it
+Q2: (B) Systematically probing a model with varied and adversarial inputs to assess reliability under pressure
+Q3: (B) Vulnerability, evidence, business impact, risk rating, and realistic mitigation
+Q4: (A) Crafted input pushed past the threshold can force an incorrect approval decision
+Q5: (C) AI Practitioner Capstone
+==================================================

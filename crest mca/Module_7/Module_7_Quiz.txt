@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What is function calling in the context of AI tool use?
+    (A) The model producing a structured call that the application executes on its behalf
+    (B) The model refusing to answer a question
+    (C) A method for compressing model weights
+    (D) A user manually calling a support line
+
+Q2. Why do agentic workflows compound security risk compared to single tool calls?
+    (A) They chain multiple autonomous tool calls, where each step's output can influence the next action
+    (B) Agents always run slower than single tool calls
+    (C) Agents cannot call any external tools
+    (D) Agentic workflows are always encrypted
+
+Q3. What does the principle of least privilege recommend for AI tools and agents?
+    (A) Granting every tool full administrative access for convenience
+    (B) Scoping each tool to the minimum permissions its intended function requires
+    (C) Removing all tools from the AI application
+    (D) Allowing agents to approve their own high-risk actions
+
+Q4. What risk does integrating a malicious or compromised third-party plugin introduce?
+    (A) It extends trust to code and infrastructure the organisation does not control
+    (B) It always improves the model's response accuracy
+    (C) It has no effect on the application's attack surface
+    (D) It only affects the plugin's own vendor
+
+Q5. Which principle states that a tool call should never be implicitly trusted just because it came from the model?
+    (A) Single Sign-On (SSO)
+    (B) Zero Trust
+    (C) Role-Based Access Control (RBAC)
+    (D) Defence in depth
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (A) The model producing a structured call that the application executes on its behalf
+Q2: (A) They chain multiple autonomous tool calls, where each step's output can influence the next action
+Q3: (B) Scoping each tool to the minimum permissions its intended function requires
+Q4: (A) It extends trust to code and infrastructure the organisation does not control
+Q5: (B) Zero Trust
+==================================================

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 2 Flashcards — AI Threat Modelling &amp; Risk Scoping</title>
+<style>
+  :root{
+    --bg:#0c0d10; --card:#111217; --stroke:#2a2f3a; --accent:#ff6a00;
+    --text:#f5f7fb; --dim:#b8c0cf;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background-color:var(--bg);
+    background-image:radial-gradient(1000px 600px at -10% -20%, rgba(255,106,0,.20), transparent 50%);
+    color:var(--text);min-height:100vh
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:36px 24px 60px}
+  header{text-align:center;margin-bottom:28px}
+  h1{margin:0;font-size:30px;font-weight:900}
+  h1 .accent{color:var(--accent)}
+  .sub{color:var(--dim);font-size:14px;margin-top:8px}
+  .toolbar{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+  .btn{border:1px solid var(--stroke);background:rgba(255,255,255,.02);color:var(--text);padding:9px 16px;border-radius:12px;cursor:pointer;font-size:14px}
+  .btn:hover{background:rgba(255,106,0,.10)}
+  .counter{color:var(--dim);font-size:14px}
+  .stage{display:flex;justify-content:center}
+  .scene{width:100%;max-width:640px;height:360px;perspective:1600px}
+  .card{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+  .card.flipped{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--stroke);border-radius:20px;
+    display:flex;align-items:center;justify-content:center;text-align:center;padding:40px;background:var(--card)}
+  .face.front{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.15)), var(--card)}
+  .face.back{transform:rotateY(180deg);background:linear-gradient(180deg, rgba(255,106,0,.10), rgba(0,0,0,.15)), var(--card);border-color:#b85100}
+  .tag{position:absolute;top:18px;left:18px;font-size:12px;font-weight:700;letter-spacing:.5px;color:#ffd9bf;background:rgba(255,106,0,.15);border:1px solid rgba(255,106,0,.35);padding:4px 10px;border-radius:999px}
+  .term{font-size:28px;font-weight:900}
+  .def{font-size:19px;line-height:1.5;color:var(--dim)}
+  .hint{position:absolute;bottom:16px;font-size:12px;color:#8891a1}
+  .dots{display:flex;justify-content:center;gap:6px;margin-top:24px;flex-wrap:wrap;max-width:640px;margin-left:auto;margin-right:auto}
+  .dot{width:9px;height:9px;border-radius:999px;background:var(--stroke);cursor:pointer}
+  .dot.active{background:var(--accent)}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:40px;font-size:12.5px;color:#8891a1;max-width:640px;margin-left:auto;margin-right:auto}
+  .wordmark{font-weight:900;letter-spacing:2px}
+  .wordmark .c{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>AI Security Practitioner <span class="accent">Flashcards</span></h1>
+    <div class="sub">Module 2: AI Threat Modelling &amp; Risk Scoping</div>
+  </header>
+
+  <div class="toolbar">
+    <button class="btn" id="prevBtn">⟨ Prev</button>
+    <span class="counter" id="counter">1 / 10</span>
+    <button class="btn" id="nextBtn">Next ⟩</button>
+    <button class="btn" id="shuffleBtn">Shuffle</button>
+  </div>
+
+  <div class="stage">
+    <div class="scene">
+      <div class="card" id="card">
+        <div class="face front">
+          <div class="tag" id="tagFront">Foundations</div>
+          <div class="term" id="termText">Term</div>
+          <div class="hint">Tap card to reveal definition</div>
+        </div>
+        <div class="face back">
+          <div class="tag" id="tagBack">Foundations</div>
+          <div class="def" id="defText">Definition</div>
+          <div class="hint">Tap card to flip back</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dots" id="dots"></div>
+
+  <div class="foot">
+    <div>My Cyber Academy</div>
+    <div class="wordmark"><span class="c">CYBER</span> ACADEMY</div>
+  </div>
+</div>
+
+<script>
+const cards = [
+  {tag:"Assets", term:"AI Asset", def:"Anything of value in an AI system: the model, prompts, data stores, connected tools, or credentials."},
+  {tag:"Assets", term:"Data Flow Mapping", def:"Tracing how data moves through a system: input, processing, storage, and output."},
+  {tag:"Process", term:"Threat Model", def:"A structured view of a system's assets, data flow, and trust boundaries used to identify plausible attacks."},
+  {tag:"Process", term:"Abuse Case", def:"A way a legitimate feature could be misused by an attacker, contrasted with its intended use case."},
+  {tag:"Risk", term:"Risk Classification", def:"Rating a threat by likelihood and impact to prioritise testing and reporting effort."},
+  {tag:"Risk", term:"Likelihood / Impact Matrix", def:"A simple grid used to classify threats: high likelihood and high impact means immediate priority."},
+  {tag:"Scope", term:"Safe Testing Boundary", def:"A written definition of what is in scope, what data may be used, and what actions are forbidden before testing begins."},
+  {tag:"Scope", term:"Ethical Testing", def:"Testing only with authorisation, using synthetic data where possible, and avoiding destructive or exfiltration actions."},
+  {tag:"Scope", term:"Acceptable vs Unsafe Testing", def:"Acceptable testing uses synthetic data within agreed scope; unsafe testing touches live production data without authorisation."},
+  {tag:"Practice", term:"Attack Path", def:"A traced route from an untrusted entry point, across a trust boundary, to a high-value asset."}
+];
+let order = cards.map((_,i)=>i);
+let pos = 0;
+const cardEl = document.getElementById('card');
+const termText = document.getElementById('termText');
+const defText = document.getElementById('defText');
+const tagFront = document.getElementById('tagFront');
+const tagBack = document.getElementById('tagBack');
+const counter = document.getElementById('counter');
+const dotsEl = document.getElementById('dots');
+
+function renderDots(){
+  dotsEl.innerHTML='';
+  order.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===pos?' active':'');
+    d.onclick = ()=>{ pos=i; render(); };
+    dotsEl.append(d);
+  });
+}
+function render(){
+  const c = cards[order[pos]];
+  cardEl.classList.remove('flipped');
+  termText.textContent = c.term;
+  defText.textContent = c.def;
+  tagFront.textContent = c.tag;
+  tagBack.textContent = c.tag;
+  counter.textContent = (pos+1) + ' / ' + order.length;
+  renderDots();
+}
+cardEl.addEventListener('click', ()=> cardEl.classList.toggle('flipped'));
+document.getElementById('nextBtn').onclick = ()=>{ pos=(pos+1)%order.length; render(); };
+document.getElementById('prevBtn').onclick = ()=>{ pos=(pos-1+order.length)%order.length; render(); };
+document.getElementById('shuffleBtn').onclick = ()=>{
+  for(let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
+  pos=0; render();
+};
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight') document.getElementById('nextBtn').click();
+  if(e.key==='ArrowLeft') document.getElementById('prevBtn').click();
+  if(e.key===' '){ e.preventDefault(); cardEl.classList.toggle('flipped'); }
+});
+render();
+</script>
+</body>
+</html>

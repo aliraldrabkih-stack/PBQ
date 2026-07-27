@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What is "improper output handling" in an AI-enabled application?
+    (A) A slow response time from the model
+    (B) Rendering, executing, or acting on model output without validation
+    (C) Displaying the model's response in the wrong font
+    (D) A model producing responses in the wrong language
+
+Q2. Why must backend systems independently validate actions that originated from the AI layer?
+    (A) Because the AI layer's parameters may have been manipulated by an attacker via the model
+    (B) Because it improves the model's response speed
+    (C) Because it is a legal requirement in all jurisdictions
+    (D) It is not necessary if the AI layer uses HTTPS
+
+Q3. What risk does unsafe file access introduce when an AI feature has file read/write capability?
+    (A) The AI feature could be manipulated into accessing files outside its intended scope
+    (B) The AI feature will automatically encrypt all files
+    (C) File access always improves model accuracy
+    (D) There is no risk if the feature only reads text files
+
+Q4. Which control restricts the AI layer to only explicitly permitted backend actions?
+    (A) Output formatting
+    (B) Allow-listing
+    (C) Increasing model temperature
+    (D) Disabling logging
+
+Q5. Which lab in the AI Security Practitioner syllabus aligns with this module's practical skills?
+    (A) RAG Access Control & Vector Store Exposure
+    (B) Improper Output Handling & Backend Exposure
+    (C) Model Information Leakage & Model Inversion
+    (D) AI Agent Tool Abuse
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (B) Rendering, executing, or acting on model output without validation
+Q2: (A) Because the AI layer's parameters may have been manipulated by an attacker via the model
+Q3: (A) The AI feature could be manipulated into accessing files outside its intended scope
+Q4: (B) Allow-listing
+Q5: (B) Improper Output Handling & Backend Exposure
+==================================================

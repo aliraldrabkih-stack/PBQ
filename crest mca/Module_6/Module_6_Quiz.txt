@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What does RAG stand for and describe in the context of AI applications?
+    (A) Rapid Application Generation, a software development method
+    (B) Retrieval-Augmented Generation, where retrieved content augments the model's response
+    (C) Recursive Algorithm Grouping, a model training technique
+    (D) Random Access Gateway, a networking protocol
+
+Q2. What is retrieval poisoning?
+    (A) A hardware fault in the vector database
+    (B) An attacker planting crafted content into the knowledge base so it is later retrieved and trusted
+    (C) A user forgetting their search query
+    (D) A billing dispute with the RAG vendor
+
+Q3. What causes unauthorised document retrieval in a RAG system?
+    (A) Retrieval not enforcing per-user or per-tenant access control
+    (B) The vector database running out of storage
+    (C) The model refusing to answer any query
+    (D) Documents being stored in plain text format
+
+Q4. Where should access control be enforced to prevent cross-tenant data retrieval?
+    (A) Only in the user interface
+    (B) At the retrieval layer itself, before content reaches the model's context
+    (C) Only in the billing system
+    (D) Access control is not relevant to RAG systems
+
+Q5. What is a vector database used for in a RAG system?
+    (A) Storing documents as embeddings to enable similarity search
+    (B) Storing user passwords in plaintext
+    (C) Rendering the application's user interface
+    (D) Sending marketing emails to customers
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (B) Retrieval-Augmented Generation, where retrieved content augments the model's response
+Q2: (B) An attacker planting crafted content into the knowledge base so it is later retrieved and trusted
+Q3: (A) Retrieval not enforcing per-user or per-tenant access control
+Q4: (B) At the retrieval layer itself, before content reaches the model's context
+Q5: (A) Storing documents as embeddings to enable similarity search
+==================================================

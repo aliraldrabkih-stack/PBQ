@@ -1,0 +1,43 @@
+
+QUESTIONS:
+
+Q1. What is the key difference between direct and indirect prompt injection?
+    (A) Direct injection is always encrypted
+    (B) Indirect injection arrives via retrieved content rather than being typed by the user
+    (C) There is no difference between the two
+    (D) Indirect injection only affects image generation models
+
+Q2. What is "role confusion" in the context of prompt injection?
+    (A) A user forgetting their account password
+    (B) Persuading the model to adopt a persona not bound by its original system prompt
+    (C) A model crashing due to a software bug
+    (D) A network misconfiguration issue
+
+Q3. Why are prompt-only defences (e.g. "never reveal your system prompt") considered weak on their own?
+    (A) They are cryptographically enforced and cannot be bypassed
+    (B) They are advisory instructions, not enforced controls, and attackers can iterate around them
+    (C) They only work for image-based models
+    (D) They are illegal to use in production
+
+Q4. What is system prompt leakage?
+    (A) The model revealing its own hidden instructions or configuration to an attacker
+    (B) A network outage affecting the AI application
+    (C) The model refusing to respond to any input
+    (D) A billing error in the AI vendor's invoice
+
+Q5. Which lab in the AI Security Practitioner syllabus aligns with this module's practical skills?
+    (A) Data Poisoning & AI Decision Manipulation
+    (B) Prompt Injection Fundamentals
+    (C) Model Information Leakage & Model Inversion
+    (D) RAG Access Control & Vector Store Exposure
+
+
+
+ANSWER KEY (For Instructor Use)
+==================================================
+Q1: (B) Indirect injection arrives via retrieved content rather than being typed by the user
+Q2: (B) Persuading the model to adopt a persona not bound by its original system prompt
+Q3: (B) They are advisory instructions, not enforced controls, and attackers can iterate around them
+Q4: (A) The model revealing its own hidden instructions or configuration to an attacker
+Q5: (B) Prompt Injection Fundamentals
+==================================================
