@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-900 Acronym Buster</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0f1117;
+    color: #e2e4e9;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .header .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.1);
+    border: 1px solid rgba(110, 231, 183, 0.25);
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.4rem;
+  }
+
+  .header p {
+    color: #8b8fa3;
+    font-size: 0.9rem;
+  }
+
+  .scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .scoreboard .stat {
+    text-align: center;
+  }
+
+  .scoreboard .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .scoreboard .stat-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #6b7080;
+  }
+
+  .game-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .column-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #6b7080;
+    margin-bottom: 1rem;
+    padding-left: 0.25rem;
+  }
+
+  .acronyms-pool {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    min-height: 200px;
+    padding: 1rem;
+    border: 1px dashed rgba(139, 143, 163, 0.2);
+    border-radius: 6px;
+    align-content: flex-start;
+  }
+
+  .acronym-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    background: #1a1d27;
+    border: 1px solid rgba(139, 143, 163, 0.2);
+    border-radius: 4px;
+    cursor: grab;
+    user-select: none;
+    transition: all 0.15s ease;
+    color: #c4c8d8;
+  }
+
+  .acronym-chip:hover {
+    border-color: #818cf8;
+    color: #fff;
+    background: rgba(129, 140, 248, 0.08);
+  }
+
+  .acronym-chip.dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+  }
+
+  .definitions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .definition-slot {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: #1a1d27;
+    border: 1px solid rgba(139, 143, 163, 0.15);
+    border-radius: 6px;
+    min-height: 52px;
+    transition: all 0.2s ease;
+  }
+
+  .definition-slot.drag-over {
+    border-color: #818cf8;
+    background: rgba(129, 140, 248, 0.06);
+  }
+
+  .definition-slot.correct {
+    border-color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.06);
+  }
+
+  .definition-slot.incorrect {
+    border-color: #f87171;
+    background: rgba(248, 113, 113, 0.06);
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+
+  .drop-target {
+    min-width: 70px;
+    min-height: 32px;
+    border: 1px dashed rgba(139, 143, 163, 0.3);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #6b7080;
+    flex-shrink: 0;
+  }
+
+  .drop-target.filled {
+    border-style: solid;
+    border-color: rgba(129, 140, 248, 0.4);
+    background: rgba(129, 140, 248, 0.1);
+    color: #a5b4fc;
+  }
+
+  .drop-target.correct {
+    border-color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.15);
+    color: #6ee7b7;
+  }
+
+  .definition-text {
+    font-size: 0.85rem;
+    color: #c4c8d8;
+    line-height: 1.4;
+  }
+
+  .controls {
+    text-align: center;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid;
+  }
+
+  .btn-primary {
+    background: #818cf8;
+    color: #fff;
+    border-color: #818cf8;
+  }
+
+  .btn-primary:hover { background: #6366f1; }
+
+  .btn-secondary {
+    background: transparent;
+    color: #8b8fa3;
+    border-color: rgba(139, 143, 163, 0.3);
+  }
+
+  .btn-secondary:hover {
+    color: #fff;
+    border-color: rgba(139, 143, 163, 0.5);
+  }
+
+  .round-selector {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .round-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.8rem;
+    background: #1a1d27;
+    border: 1px solid rgba(139, 143, 163, 0.2);
+    color: #6b7080;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .round-btn.active {
+    background: rgba(129, 140, 248, 0.15);
+    border-color: #818cf8;
+    color: #a5b4fc;
+  }
+
+  .round-btn:hover { border-color: #818cf8; color: #a5b4fc; }
+
+  .complete-banner {
+    display: none;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    background: rgba(110, 231, 183, 0.08);
+    border: 1px solid rgba(110, 231, 183, 0.2);
+    border-radius: 6px;
+  }
+
+  .complete-banner h2 {
+    color: #6ee7b7;
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .complete-banner p {
+    color: #8b8fa3;
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 768px) {
+    .game-area {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">MCA &middot; AZ-900 Study Buddy</div>
+  <h1>Acronym Buster</h1>
+  <p>Drag each acronym to its matching definition</p>
+</div>
+
+<div class="scoreboard">
+  <div class="stat">
+    <div class="stat-value" id="score">0</div>
+    <div class="stat-label">Matched</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="total">0</div>
+    <div class="stat-label">Total</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="attempts">0</div>
+    <div class="stat-label">Attempts</div>
+  </div>
+</div>
+
+<div class="round-selector" id="roundSelector"></div>
+
+<div class="game-area">
+  <div>
+    <div class="column-title">Acronyms</div>
+    <div class="acronyms-pool" id="acronymPool"></div>
+  </div>
+  <div>
+    <div class="column-title">Definitions</div>
+    <div class="definitions-list" id="definitionsList"></div>
+  </div>
+</div>
+
+<div class="complete-banner" id="completeBanner">
+  <h2>Round Complete!</h2>
+  <p id="completeMsg"></p>
+</div>
+
+<div class="controls">
+  <button class="btn-secondary" onclick="resetRound()">Reset Round</button>
+  <button class="btn-primary" onclick="nextRound()">Next Round &rarr;</button>
+</div>
+
+<script>
+const rounds = [
+  {
+    name: "Cloud Fundamentals",
+    pairs: [
+      { acronym: "IaaS", definition: "Infrastructure as a Service — rent VMs, storage, and networks" },
+      { acronym: "PaaS", definition: "Platform as a Service — deploy code without managing servers" },
+      { acronym: "SaaS", definition: "Software as a Service — use apps over the internet (e.g. Microsoft 365)" },
+      { acronym: "CapEx", definition: "Capital Expenditure — upfront spend on physical infrastructure" },
+      { acronym: "OpEx", definition: "Operational Expenditure — pay-as-you-go spending model" },
+      { acronym: "HA", definition: "High Availability — systems designed to minimise downtime" },
+      { acronym: "SLA", definition: "Service Level Agreement — uptime guarantee (e.g. 99.9%)" },
+      { acronym: "TCO", definition: "Total Cost of Ownership — full lifetime cost of running a service" },
+    ]
+  },
+  {
+    name: "Core Services",
+    pairs: [
+      { acronym: "VM", definition: "Virtual Machine — emulated computer running on shared hardware" },
+      { acronym: "VNet", definition: "Virtual Network — logically isolated network in Azure" },
+      { acronym: "NSG", definition: "Network Security Group — firewall rules for Azure resources" },
+      { acronym: "LB", definition: "Load Balancer — distributes traffic across multiple backends" },
+      { acronym: "CDN", definition: "Content Delivery Network — caches content at edge locations globally" },
+      { acronym: "AKS", definition: "Azure Kubernetes Service — managed container orchestration" },
+      { acronym: "ACR", definition: "Azure Container Registry — private registry for container images" },
+      { acronym: "DNS", definition: "Domain Name System — translates domain names to IP addresses" },
+    ]
+  },
+  {
+    name: "Security & Identity",
+    pairs: [
+      { acronym: "AAD", definition: "Azure Active Directory (now Entra ID) — cloud identity provider" },
+      { acronym: "MFA", definition: "Multi-Factor Authentication — requires two or more verification methods" },
+      { acronym: "RBAC", definition: "Role-Based Access Control — permissions assigned by role, not user" },
+      { acronym: "SSO", definition: "Single Sign-On — one login grants access to multiple apps" },
+      { acronym: "PIM", definition: "Privileged Identity Management — just-in-time admin access" },
+      { acronym: "DDoS", definition: "Distributed Denial of Service — attack that floods a target with traffic" },
+      { acronym: "CMK", definition: "Customer-Managed Key — encryption key controlled by you, not Microsoft" },
+      { acronym: "WAF", definition: "Web Application Firewall — protects web apps from common exploits" },
+    ]
+  },
+  {
+    name: "Governance & Monitoring",
+    pairs: [
+      { acronym: "ARM", definition: "Azure Resource Manager — deployment and management layer for Azure" },
+      { acronym: "RG", definition: "Resource Group — logical container that holds related Azure resources" },
+      { acronym: "KQL", definition: "Kusto Query Language — query language used in Azure Monitor and Sentinel" },
+      { acronym: "BCDR", definition: "Business Continuity & Disaster Recovery — plans to keep running after failure" },
+      { acronym: "RTO", definition: "Recovery Time Objective — max acceptable downtime after an incident" },
+      { acronym: "RPO", definition: "Recovery Point Objective — max acceptable data loss measured in time" },
+      { acronym: "EA", definition: "Enterprise Agreement — volume licensing deal with committed Azure spend" },
+      { acronym: "SKU", definition: "Stock Keeping Unit — specific tier or size of an Azure resource" },
+    ]
+  }
+];
+
+let currentRound = 0;
+let score = 0;
+let attempts = 0;
+let matched = new Set();
+let draggedAcronym = null;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildRoundSelector() {
+  const sel = document.getElementById('roundSelector');
+  sel.innerHTML = '';
+  rounds.forEach((r, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'round-btn' + (i === currentRound ? ' active' : '');
+    btn.textContent = r.name;
+    btn.onclick = () => { currentRound = i; score = 0; attempts = 0; matched.clear(); loadRound(); };
+    sel.appendChild(btn);
+  });
+}
+
+function loadRound() {
+  const round = rounds[currentRound];
+  const pool = document.getElementById('acronymPool');
+  const list = document.getElementById('definitionsList');
+  document.getElementById('completeBanner').style.display = 'none';
+
+  buildRoundSelector();
+  updateScore();
+
+  const shuffledAcronyms = shuffle(round.pairs);
+  const shuffledDefs = shuffle(round.pairs);
+
+  pool.innerHTML = '';
+  shuffledAcronyms.forEach(p => {
+    const chip = document.createElement('div');
+    chip.className = 'acronym-chip';
+    chip.textContent = p.acronym;
+    chip.draggable = true;
+    chip.dataset.acronym = p.acronym;
+
+    chip.addEventListener('dragstart', e => {
+      draggedAcronym = p.acronym;
+      chip.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    chip.addEventListener('dragend', () => {
+      chip.classList.remove('dragging');
+      draggedAcronym = null;
+    });
+
+    // Touch support
+    chip.addEventListener('touchstart', e => {
+      draggedAcronym = p.acronym;
+      chip.classList.add('dragging');
+    }, { passive: true });
+
+    pool.appendChild(chip);
+  });
+
+  list.innerHTML = '';
+  shuffledDefs.forEach(p => {
+    const slot = document.createElement('div');
+    slot.className = 'definition-slot';
+    slot.dataset.answer = p.acronym;
+
+    const target = document.createElement('div');
+    target.className = 'drop-target';
+    target.textContent = '?';
+
+    const text = document.createElement('div');
+    text.className = 'definition-text';
+    text.textContent = p.definition;
+
+    slot.appendChild(target);
+    slot.appendChild(text);
+
+    slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
+    slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+    slot.addEventListener('drop', e => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+      handleDrop(slot, draggedAcronym);
+    });
+
+    // Touch support
+    slot.addEventListener('touchend', e => {
+      if (draggedAcronym) {
+        handleDrop(slot, draggedAcronym);
+        document.querySelectorAll('.acronym-chip.dragging').forEach(c => c.classList.remove('dragging'));
+      }
+    });
+
+    list.appendChild(slot);
+  });
+
+  document.getElementById('total').textContent = round.pairs.length;
+}
+
+function handleDrop(slot, acronym) {
+  if (!acronym || matched.has(acronym)) return;
+
+  attempts++;
+  const correct = slot.dataset.answer === acronym;
+  const target = slot.querySelector('.drop-target');
+
+  if (correct) {
+    score++;
+    matched.add(acronym);
+    target.textContent = acronym;
+    target.classList.add('filled', 'correct');
+    slot.classList.add('correct');
+
+    const chip = document.querySelector(`.acronym-chip[data-acronym="${acronym}"]`);
+    if (chip) chip.remove();
+
+    if (matched.size === rounds[currentRound].pairs.length) {
+      const banner = document.getElementById('completeBanner');
+      banner.style.display = 'block';
+      const pct = Math.round((score / attempts) * 100);
+      document.getElementById('completeMsg').textContent =
+        `${score}/${rounds[currentRound].pairs.length} matched in ${attempts} attempts (${pct}% accuracy)`;
+    }
+  } else {
+    slot.classList.add('incorrect');
+    target.textContent = acronym;
+    target.classList.add('filled');
+    setTimeout(() => {
+      slot.classList.remove('incorrect');
+      target.textContent = '?';
+      target.classList.remove('filled');
+    }, 800);
+  }
+
+  updateScore();
+}
+
+function updateScore() {
+  document.getElementById('score').textContent = score;
+  document.getElementById('attempts').textContent = attempts;
+}
+
+function resetRound() {
+  score = 0; attempts = 0; matched.clear();
+  loadRound();
+}
+
+function nextRound() {
+  currentRound = (currentRound + 1) % rounds.length;
+  score = 0; attempts = 0; matched.clear();
+  loadRound();
+}
+
+loadRound();
+</script>
+</body>
+</html>

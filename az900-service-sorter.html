@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-900 Service Sorter</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0f1117;
+    color: #e2e4e9;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .header .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 { font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem; }
+  .header p { color: #8b8fa3; font-size: 0.9rem; }
+
+  .scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat { text-align: center; }
+  .stat-value { font-size: 1.6rem; font-weight: 700; color: #fff; }
+  .stat-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: #6b7080; }
+
+  .service-pool {
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    padding: 1.2rem;
+    border: 1px dashed rgba(139, 143, 163, 0.2);
+    border-radius: 6px;
+    min-height: 60px;
+  }
+
+  .service-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.45rem 0.9rem;
+    background: #1a1d27;
+    border: 1px solid rgba(139, 143, 163, 0.2);
+    border-radius: 4px;
+    cursor: grab;
+    user-select: none;
+    transition: all 0.15s ease;
+    color: #c4c8d8;
+  }
+
+  .service-chip:hover { border-color: #f59e0b; color: #fff; }
+  .service-chip.dragging { opacity: 0.3; }
+
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .category {
+    border: 1px solid rgba(139, 143, 163, 0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+
+  .category.drag-over { border-color: #f59e0b; }
+
+  .category-header {
+    padding: 0.8rem 1rem;
+    text-align: center;
+  }
+
+  .cat-iaas .category-header { background: rgba(129, 140, 248, 0.1); border-bottom: 2px solid #818cf8; }
+  .cat-paas .category-header { background: rgba(52, 211, 153, 0.1); border-bottom: 2px solid #34d399; }
+  .cat-saas .category-header { background: rgba(251, 191, 36, 0.1); border-bottom: 2px solid #fbbf24; }
+
+  .category-header h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .cat-iaas h2 { color: #818cf8; }
+  .cat-paas h2 { color: #34d399; }
+  .cat-saas h2 { color: #fbbf24; }
+
+  .category-header .subtitle {
+    font-size: 0.72rem;
+    color: #6b7080;
+    margin-top: 0.2rem;
+  }
+
+  .category-drop {
+    padding: 0.8rem;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .placed-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+  .placed-chip.correct {
+    background: rgba(110, 231, 183, 0.1);
+    border: 1px solid rgba(110, 231, 183, 0.3);
+    color: #6ee7b7;
+  }
+
+  .placed-chip.incorrect {
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    color: #f87171;
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-5px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(3px); }
+  }
+
+  .placed-chip .icon { font-size: 0.9rem; flex-shrink: 0; }
+
+  .controls {
+    text-align: center;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid;
+  }
+
+  .btn-primary { background: #f59e0b; color: #0f1117; border-color: #f59e0b; }
+  .btn-primary:hover { background: #d97706; }
+  .btn-secondary { background: transparent; color: #8b8fa3; border-color: rgba(139, 143, 163, 0.3); }
+  .btn-secondary:hover { color: #fff; border-color: rgba(139, 143, 163, 0.5); }
+
+  .hint-panel {
+    max-width: 900px;
+    margin: 1.5rem auto 0;
+    padding: 1rem 1.2rem;
+    background: rgba(245, 158, 11, 0.06);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: #d4a44a;
+    line-height: 1.5;
+    display: none;
+  }
+
+  .hint-panel strong { color: #fbbf24; }
+
+  @media (max-width: 768px) {
+    .categories { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">MCA &middot; AZ-900 Study Buddy</div>
+  <h1>Service Sorter</h1>
+  <p>Drag each Azure service into the correct cloud model category</p>
+</div>
+
+<div class="scoreboard">
+  <div class="stat">
+    <div class="stat-value" id="correct">0</div>
+    <div class="stat-label">Correct</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="remaining">0</div>
+    <div class="stat-label">Remaining</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="accuracy">—</div>
+    <div class="stat-label">Accuracy</div>
+  </div>
+</div>
+
+<div class="service-pool" id="servicePool"></div>
+
+<div class="categories">
+  <div class="category cat-iaas" data-cat="IaaS">
+    <div class="category-header">
+      <h2>IaaS</h2>
+      <div class="subtitle">You manage the OS upwards</div>
+    </div>
+    <div class="category-drop" id="drop-IaaS"></div>
+  </div>
+  <div class="category cat-paas" data-cat="PaaS">
+    <div class="category-header">
+      <h2>PaaS</h2>
+      <div class="subtitle">You manage your code &amp; data</div>
+    </div>
+    <div class="category-drop" id="drop-PaaS"></div>
+  </div>
+  <div class="category cat-saas" data-cat="SaaS">
+    <div class="category-header">
+      <h2>SaaS</h2>
+      <div class="subtitle">You just use it</div>
+    </div>
+    <div class="category-drop" id="drop-SaaS"></div>
+  </div>
+</div>
+
+<div class="hint-panel" id="hintPanel"></div>
+
+<div class="controls">
+  <button class="btn-secondary" onclick="toggleHints()">Show Hints</button>
+  <button class="btn-secondary" onclick="resetGame()">Reset</button>
+  <button class="btn-primary" onclick="newSet()">New Set &#x21bb;</button>
+</div>
+
+<script>
+const allServices = [
+  { name: "Azure VMs", cat: "IaaS", hint: "You pick the OS, patch it, manage it — classic infrastructure." },
+  { name: "Virtual Network", cat: "IaaS", hint: "You define subnets, routing, peering — it's your network to manage." },
+  { name: "Azure Disk Storage", cat: "IaaS", hint: "Raw managed disks attached to your VMs." },
+  { name: "Azure Firewall", cat: "IaaS", hint: "Network-level firewall you configure and manage rules for." },
+  { name: "VPN Gateway", cat: "IaaS", hint: "You provision and configure the gateway tunnel yourself." },
+  { name: "Azure Load Balancer", cat: "IaaS", hint: "Layer 4 load balancer — you configure the rules." },
+
+  { name: "App Service", cat: "PaaS", hint: "Deploy your code, Azure handles the underlying servers." },
+  { name: "Azure SQL Database", cat: "PaaS", hint: "Managed database — no patching, backups handled for you." },
+  { name: "Azure Functions", cat: "PaaS", hint: "Serverless compute — just upload your function code." },
+  { name: "Cosmos DB", cat: "PaaS", hint: "Fully managed NoSQL — you focus on data, not infrastructure." },
+  { name: "Azure Kubernetes (AKS)", cat: "PaaS", hint: "Managed K8s — Azure handles the control plane." },
+  { name: "Logic Apps", cat: "PaaS", hint: "Visual workflow builder — no servers to manage." },
+  { name: "Azure DevOps", cat: "PaaS", hint: "Managed CI/CD pipelines, repos, boards — platform provided." },
+  { name: "Event Grid", cat: "PaaS", hint: "Managed event routing service — no infrastructure to run." },
+
+  { name: "Microsoft 365", cat: "SaaS", hint: "Word, Excel, Teams — ready to use, nothing to deploy." },
+  { name: "Dynamics 365", cat: "SaaS", hint: "CRM/ERP apps consumed over the browser." },
+  { name: "Power BI", cat: "SaaS", hint: "Business analytics dashboards — log in and go." },
+  { name: "Azure DevTest Labs", cat: "SaaS", hint: "Self-service lab environments with policies — consumed as-is." },
+  { name: "Microsoft Intune", cat: "SaaS", hint: "Device management service — configure via portal, no hosting." },
+  { name: "GitHub (Microsoft)", cat: "SaaS", hint: "Source control platform — fully hosted, just sign up." },
+];
+
+let pool = [];
+let correctCount = 0;
+let totalAttempts = 0;
+let dragged = null;
+let hintsVisible = false;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickSet() {
+  const shuffled = shuffle(allServices);
+  return shuffled.slice(0, 12);
+}
+
+function render() {
+  const poolEl = document.getElementById('servicePool');
+  poolEl.innerHTML = '';
+
+  pool.forEach(svc => {
+    const chip = document.createElement('div');
+    chip.className = 'service-chip';
+    chip.textContent = svc.name;
+    chip.draggable = true;
+    chip.dataset.name = svc.name;
+
+    chip.addEventListener('dragstart', e => {
+      dragged = svc;
+      chip.classList.add('dragging');
+    });
+    chip.addEventListener('dragend', () => {
+      chip.classList.remove('dragging');
+      dragged = null;
+    });
+
+    chip.addEventListener('touchstart', () => {
+      dragged = svc;
+      chip.classList.add('dragging');
+    }, { passive: true });
+
+    poolEl.appendChild(chip);
+  });
+
+  ['IaaS', 'PaaS', 'SaaS'].forEach(cat => {
+    const drop = document.getElementById('drop-' + cat);
+    drop.innerHTML = '';
+
+    const catEl = drop.closest('.category');
+    catEl.addEventListener('dragover', e => { e.preventDefault(); catEl.classList.add('drag-over'); });
+    catEl.addEventListener('dragleave', () => catEl.classList.remove('drag-over'));
+    catEl.addEventListener('drop', e => {
+      e.preventDefault();
+      catEl.classList.remove('drag-over');
+      if (dragged) handleDrop(cat, dragged);
+    });
+
+    catEl.addEventListener('touchend', () => {
+      if (dragged) {
+        handleDrop(cat, dragged);
+        document.querySelectorAll('.service-chip.dragging').forEach(c => c.classList.remove('dragging'));
+      }
+    });
+  });
+
+  updateStats();
+}
+
+function handleDrop(targetCat, svc) {
+  totalAttempts++;
+  const isCorrect = svc.cat === targetCat;
+  const drop = document.getElementById('drop-' + targetCat);
+
+  const chip = document.createElement('div');
+  chip.className = 'placed-chip ' + (isCorrect ? 'correct' : 'incorrect');
+  chip.innerHTML = `<span>${svc.name}</span><span class="icon">${isCorrect ? '✓' : '✗'}</span>`;
+  drop.appendChild(chip);
+
+  if (isCorrect) {
+    correctCount++;
+    pool = pool.filter(s => s.name !== svc.name);
+    const poolChip = document.querySelector(`.service-chip[data-name="${svc.name}"]`);
+    if (poolChip) poolChip.remove();
+  } else {
+    setTimeout(() => chip.remove(), 1200);
+    if (hintsVisible) showHint(svc);
+  }
+
+  dragged = null;
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('correct').textContent = correctCount;
+  document.getElementById('remaining').textContent = pool.length;
+  document.getElementById('accuracy').textContent =
+    totalAttempts > 0 ? Math.round((correctCount / totalAttempts) * 100) + '%' : '—';
+}
+
+function showHint(svc) {
+  const panel = document.getElementById('hintPanel');
+  panel.style.display = 'block';
+  panel.innerHTML = `<strong>${svc.name}</strong> belongs in <strong>${svc.cat}</strong> — ${svc.hint}`;
+}
+
+function toggleHints() {
+  hintsVisible = !hintsVisible;
+  const panel = document.getElementById('hintPanel');
+  if (!hintsVisible) panel.style.display = 'none';
+  else {
+    panel.style.display = 'block';
+    panel.innerHTML = 'Hints enabled — incorrect placements will show why.';
+  }
+}
+
+function resetGame() {
+  correctCount = 0;
+  totalAttempts = 0;
+  hintsVisible = false;
+  document.getElementById('hintPanel').style.display = 'none';
+  render();
+}
+
+function newSet() {
+  pool = pickSet();
+  correctCount = 0;
+  totalAttempts = 0;
+  ['IaaS', 'PaaS', 'SaaS'].forEach(c => document.getElementById('drop-' + c).innerHTML = '');
+  render();
+}
+
+pool = pickSet();
+render();
+</script>
+</body>
+</html>

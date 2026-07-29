@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-900 Jargon Buster</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0f1117;
+    color: #e2e4e9;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .header .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #f472b6;
+    background: rgba(244, 114, 182, 0.1);
+    border: 1px solid rgba(244, 114, 182, 0.25);
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 { font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem; }
+  .header p { color: #8b8fa3; font-size: 0.9rem; max-width: 500px; margin: 0 auto; }
+
+  .progress-bar {
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    height: 4px;
+    background: #1a1d27;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f472b6, #818cf8);
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  .game-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .round-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #6b7080;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .match-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .column-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #6b7080;
+    margin-bottom: 0.8rem;
+    padding-left: 0.2rem;
+  }
+
+  .jargon-list, .plain-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .jargon-card {
+    padding: 0.65rem 1rem;
+    background: #1a1d27;
+    border: 1px solid rgba(139, 143, 163, 0.15);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #c4c8d8;
+    user-select: none;
+  }
+
+  .jargon-card:hover { border-color: #f472b6; color: #fff; }
+
+  .jargon-card.selected {
+    border-color: #f472b6;
+    background: rgba(244, 114, 182, 0.1);
+    color: #f9a8d4;
+    box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.3);
+  }
+
+  .jargon-card.matched {
+    border-color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.08);
+    color: #6ee7b7;
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .plain-card {
+    padding: 0.65rem 1rem;
+    background: #1a1d27;
+    border: 1px solid rgba(139, 143, 163, 0.15);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 0.82rem;
+    color: #9ca0b3;
+    line-height: 1.4;
+    user-select: none;
+  }
+
+  .plain-card:hover { border-color: #818cf8; color: #c4c8d8; }
+
+  .plain-card.selected {
+    border-color: #818cf8;
+    background: rgba(129, 140, 248, 0.1);
+    color: #a5b4fc;
+  }
+
+  .plain-card.matched {
+    border-color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.08);
+    color: #6ee7b7;
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .plain-card.wrong, .jargon-card.wrong {
+    border-color: #f87171;
+    background: rgba(248, 113, 113, 0.08);
+    animation: shake 0.35s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  .feedback {
+    text-align: center;
+    margin-top: 1.5rem;
+    min-height: 2.5rem;
+  }
+
+  .feedback-msg {
+    font-size: 0.85rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    display: inline-block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .feedback-msg.success {
+    color: #6ee7b7;
+    background: rgba(110, 231, 183, 0.08);
+    border: 1px solid rgba(110, 231, 183, 0.2);
+  }
+
+  .feedback-msg.wrong {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.08);
+    border: 1px solid rgba(248, 113, 113, 0.2);
+  }
+
+  .feedback-msg.complete {
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    font-weight: 600;
+  }
+
+  .controls {
+    text-align: center;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid;
+  }
+
+  .btn-primary { background: #f472b6; color: #0f1117; border-color: #f472b6; }
+  .btn-primary:hover { background: #ec4899; }
+  .btn-secondary { background: transparent; color: #8b8fa3; border-color: rgba(139, 143, 163, 0.3); }
+  .btn-secondary:hover { color: #fff; border-color: rgba(139, 143, 163, 0.5); }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 1.5rem;
+  }
+
+  .mini-stat { text-align: center; }
+  .mini-stat .val { font-size: 1.2rem; font-weight: 700; color: #fff; }
+  .mini-stat .lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: #6b7080; }
+
+  @media (max-width: 640px) {
+    .match-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">MCA &middot; AZ-900 Study Buddy</div>
+  <h1>Jargon Buster</h1>
+  <p>Select a cloud term on the left, then click its plain-English meaning on the right</p>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<div class="stats-row">
+  <div class="mini-stat"><div class="val" id="matchCount">0</div><div class="lbl">Matched</div></div>
+  <div class="mini-stat"><div class="val" id="streakCount">0</div><div class="lbl">Streak</div></div>
+  <div class="mini-stat"><div class="val" id="roundNum">1</div><div class="lbl">Round</div></div>
+</div>
+
+<div class="game-container">
+  <div class="round-label" id="roundLabel"></div>
+  <div class="match-grid">
+    <div>
+      <div class="column-label">Cloud Jargon</div>
+      <div class="jargon-list" id="jargonList"></div>
+    </div>
+    <div>
+      <div class="column-label">Plain English</div>
+      <div class="plain-list" id="plainList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="feedback" id="feedback"></div>
+
+<div class="controls">
+  <button class="btn-secondary" onclick="resetAll()">Start Over</button>
+  <button class="btn-primary" onclick="nextRound()">Next Round &rarr;</button>
+</div>
+
+<script>
+const rounds = [
+  {
+    name: "Cloud Architecture Jargon",
+    pairs: [
+      { jargon: "Elasticity", plain: "Resources automatically scale up or down to match demand" },
+      { jargon: "Fault Tolerance", plain: "System keeps working even when components fail" },
+      { jargon: "Geo-redundancy", plain: "Data copied to a different region in case a whole area goes down" },
+      { jargon: "Horizontal Scaling", plain: "Adding more machines rather than making one bigger" },
+      { jargon: "Vertical Scaling", plain: "Making a single machine more powerful (more CPU, RAM)" },
+      { jargon: "Latency", plain: "The delay between a request and its response" },
+    ]
+  },
+  {
+    name: "Identity & Access Jargon",
+    pairs: [
+      { jargon: "Tenant", plain: "Your organisation's dedicated instance of Azure AD / Entra ID" },
+      { jargon: "Service Principal", plain: "An identity used by apps or automation instead of a person" },
+      { jargon: "Managed Identity", plain: "Azure automatically handles credentials for your resource" },
+      { jargon: "Conditional Access", plain: "Rules that decide if/how someone can sign in based on context" },
+      { jargon: "Least Privilege", plain: "Only give people the minimum permissions they actually need" },
+      { jargon: "Federation", plain: "Trusting an external identity provider to authenticate users" },
+    ]
+  },
+  {
+    name: "Networking Jargon",
+    pairs: [
+      { jargon: "Peering", plain: "Connecting two virtual networks so they can talk directly" },
+      { jargon: "Subnet", plain: "A smaller address range carved out of a virtual network" },
+      { jargon: "Private Endpoint", plain: "Access an Azure service over a private IP, not the public internet" },
+      { jargon: "Service Endpoint", plain: "Secure, direct route from a VNet to an Azure service backbone" },
+      { jargon: "NAT Gateway", plain: "Lets resources in a private subnet reach the internet for outbound traffic" },
+      { jargon: "UDR", plain: "User-Defined Route — a custom routing rule you create for network traffic" },
+    ]
+  },
+  {
+    name: "Governance & Compliance Jargon",
+    pairs: [
+      { jargon: "Azure Policy", plain: "Rules that enforce standards on resources (e.g. 'must be in UK South')" },
+      { jargon: "Management Group", plain: "A container above subscriptions for organising governance at scale" },
+      { jargon: "Blueprint", plain: "A package of policies, roles, and ARM templates you deploy together" },
+      { jargon: "Resource Lock", plain: "Prevents accidental deletion or modification of a resource" },
+      { jargon: "Cost Management", plain: "Tools to monitor, allocate, and optimise your Azure spending" },
+      { jargon: "Compliance Manager", plain: "Dashboard showing how well you meet regulatory requirements" },
+    ]
+  },
+  {
+    name: "Storage & Data Jargon",
+    pairs: [
+      { jargon: "Blob Storage", plain: "Object storage for unstructured data like files, images, backups" },
+      { jargon: "Hot Tier", plain: "Storage optimised for data you access frequently — higher cost per GB" },
+      { jargon: "Cool Tier", plain: "Cheaper storage for data you access infrequently (30+ day minimum)" },
+      { jargon: "Archive Tier", plain: "Cheapest storage — data takes hours to retrieve, for long-term retention" },
+      { jargon: "LRS", plain: "Locally Redundant Storage — three copies in one data centre" },
+      { jargon: "GRS", plain: "Geo-Redundant Storage — copies data to a paired region hundreds of miles away" },
+    ]
+  }
+];
+
+let currentRound = 0;
+let matchCount = 0;
+let streak = 0;
+let selectedJargon = null;
+let selectedPlain = null;
+let matchedPairs = new Set();
+let totalMatched = 0;
+const totalPairs = rounds.reduce((s, r) => s + r.pairs.length, 0);
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function loadRound() {
+  const round = rounds[currentRound];
+  matchedPairs.clear();
+  matchCount = 0;
+  selectedJargon = null;
+  selectedPlain = null;
+
+  document.getElementById('roundLabel').textContent = `Round ${currentRound + 1} of ${rounds.length} — ${round.name}`;
+  document.getElementById('roundNum').textContent = currentRound + 1;
+  document.getElementById('feedback').innerHTML = '';
+
+  const jargonList = document.getElementById('jargonList');
+  const plainList = document.getElementById('plainList');
+  jargonList.innerHTML = '';
+  plainList.innerHTML = '';
+
+  const shuffledJ = shuffle(round.pairs);
+  const shuffledP = shuffle(round.pairs);
+
+  shuffledJ.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'jargon-card';
+    card.textContent = p.jargon;
+    card.dataset.jargon = p.jargon;
+    card.onclick = () => selectJargon(p.jargon, card);
+    jargonList.appendChild(card);
+  });
+
+  shuffledP.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'plain-card';
+    card.textContent = p.plain;
+    card.dataset.jargon = p.jargon;
+    card.onclick = () => selectPlain(p.jargon, card);
+    plainList.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+function selectJargon(jargon, card) {
+  if (matchedPairs.has(jargon)) return;
+  document.querySelectorAll('.jargon-card.selected').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedJargon = jargon;
+  if (selectedPlain !== null) checkMatch();
+}
+
+function selectPlain(jargon, card) {
+  if (matchedPairs.has(jargon)) return;
+  document.querySelectorAll('.plain-card.selected').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedPlain = { answer: jargon, el: card };
+  if (selectedJargon !== null) checkMatch();
+}
+
+function checkMatch() {
+  const jCard = document.querySelector(`.jargon-card.selected`);
+  const pCard = selectedPlain.el;
+
+  if (selectedJargon === selectedPlain.answer) {
+    matchCount++;
+    totalMatched++;
+    streak++;
+    matchedPairs.add(selectedJargon);
+
+    jCard.classList.remove('selected');
+    jCard.classList.add('matched');
+    pCard.classList.remove('selected');
+    pCard.classList.add('matched');
+
+    showFeedback('success', streak > 2 ? `🔥 ${streak} streak!` : '✓ Correct!');
+
+    if (matchCount === rounds[currentRound].pairs.length) {
+      if (currentRound === rounds.length - 1) {
+        showFeedback('complete', `🎉 All ${totalPairs} terms mastered!`);
+      } else {
+        showFeedback('success', `Round complete! Hit "Next Round" to continue.`);
+      }
+    }
+  } else {
+    streak = 0;
+    jCard.classList.add('wrong');
+    pCard.classList.add('wrong');
+    showFeedback('wrong', '✗ Not quite — try again');
+    setTimeout(() => {
+      jCard.classList.remove('wrong', 'selected');
+      pCard.classList.remove('wrong', 'selected');
+    }, 600);
+  }
+
+  selectedJargon = null;
+  selectedPlain = null;
+  updateProgress();
+}
+
+function showFeedback(type, msg) {
+  document.getElementById('feedback').innerHTML = `<div class="feedback-msg ${type}">${msg}</div>`;
+}
+
+function updateProgress() {
+  const pct = (totalMatched / totalPairs) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('matchCount').textContent = totalMatched;
+  document.getElementById('streakCount').textContent = streak;
+}
+
+function nextRound() {
+  currentRound = (currentRound + 1) % rounds.length;
+  if (currentRound === 0) totalMatched = 0;
+  loadRound();
+}
+
+function resetAll() {
+  currentRound = 0;
+  totalMatched = 0;
+  streak = 0;
+  loadRound();
+}
+
+loadRound();
+</script>
+</body>
+</html>
