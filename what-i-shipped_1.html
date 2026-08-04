@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What I Shipped — Ali</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  /* Literal hex only — no CSS variables, so the PDF renderer can't drop colors */
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:#FCFAF5;
+    background-image:
+      radial-gradient(circle at 12% 2%, rgba(245,114,27,.07), transparent 38%),
+      radial-gradient(circle at 92% 12%, rgba(245,114,27,.05), transparent 34%);
+    color:#16161A;
+    font-family:'Patrick Hand',cursive;
+    font-size:17px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .page{max-width:790px;margin:0 auto;padding:38px 20px 70px}
+
+  /* hand-drawn box */
+  .sketch{
+    border:2.5px solid #16161A;
+    border-radius:255px 14px 225px 16px/16px 225px 14px 255px;
+    box-shadow:4px 5px 0 rgba(22,22,26,.13);
+    background:#FFFFFF;
+  }
+  .sketch.alt{border-radius:16px 225px 14px 255px/225px 16px 255px 14px}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:26px 30px 24px;margin-bottom:22px;transform:rotate(-.35deg);position:relative;overflow:hidden}
+  .hero-grid{display:flex;gap:22px;align-items:center}
+  .hero-copy{flex:1;min-width:0}
+  .eyebrow{font-family:'Patrick Hand',cursive;font-size:16px;color:#F5721B;letter-spacing:.5px}
+  h1{
+    font-family:'Caveat',cursive;font-weight:700;
+    font-size:clamp(44px,9vw,72px);line-height:.95;margin:4px 0 8px;color:#16161A;
+  }
+  h1 .swipe{
+    background:linear-gradient(180deg,transparent 12%,#FFC183 12%,#FFA451 86%,transparent 86%);
+    padding:0 .06em;
+  }
+  .tagline{font-size:18px;color:#3A3A40;max-width:44ch}
+  .tagline u{text-decoration-color:#F5721B;text-decoration-thickness:2px;text-underline-offset:3px}
+  .hero-doodle{width:130px;flex-shrink:0}
+  @media(max-width:560px){.hero-doodle{display:none}}
+
+  /* ---------- STATS ---------- */
+  .stats{display:flex;gap:14px;margin-bottom:26px}
+  .stat{
+    flex:1;text-align:center;padding:16px 8px 14px;background:#FFF6D9;
+    border:2.5px solid #16161A;box-shadow:4px 5px 0 rgba(22,22,26,.13);
+    border-radius:225px 16px 255px 14px/14px 255px 16px 225px;
+  }
+  .stat:nth-child(2){background:#FFE6CC;transform:rotate(.5deg)}
+  .stat:nth-child(3){background:#E4EFF9;transform:rotate(-.4deg)}
+  .stat .n{font-family:'Caveat',cursive;font-weight:700;font-size:44px;line-height:.9;color:#16161A}
+  .stat:nth-child(2) .n{color:#D8590A}
+  .stat .l{font-size:15px;color:#4A4A52;margin-top:4px}
+  @media(max-width:560px){.stats{flex-wrap:wrap}.stat{min-width:44%}}
+
+  /* ---------- CONTROLS (screen only) ---------- */
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px}
+  .tab,.act{
+    font-family:'Patrick Hand',cursive;font-size:16px;cursor:pointer;
+    padding:7px 16px;background:#FFFFFF;color:#16161A;
+    border:2.5px solid #16161A;box-shadow:3px 4px 0 rgba(22,22,26,.15);
+    border-radius:255px 14px 225px 16px/16px 225px 14px 255px;
+    display:inline-flex;align-items:center;gap:7px;transition:transform .12s;
+  }
+  .tab:hover,.act:hover{transform:translate(-1px,-1px)}
+  .tab:active,.act:active{transform:translate(2px,3px);box-shadow:1px 1px 0 rgba(22,22,26,.15)}
+  .tab.on{background:#F5721B;color:#FFFFFF}
+  .act.go{background:#FFD84D}
+  .act svg{width:16px;height:16px}
+  .grow{flex:1}
+  .act:disabled{opacity:.55;cursor:wait}
+
+  /* ---------- SECTIONS ---------- */
+  .sec{padding:20px 24px 22px;margin-bottom:20px}
+  .sec:nth-of-type(odd){transform:rotate(-.3deg)}
+  .sec:nth-of-type(even){transform:rotate(.28deg)}
+  .sec-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .sec-h svg{width:26px;height:26px;flex-shrink:0}
+  .sec-h h2{
+    font-family:'Caveat',cursive;font-weight:700;font-size:31px;margin:0;line-height:1;color:#16161A;
+  }
+  .sec-h .rule{flex:1;height:2px;background:#16161A;opacity:.22;border-radius:2px}
+  .sec-h .cnt{font-family:'Caveat',cursive;font-weight:700;font-size:22px;color:#7A7A82}
+
+  .item{display:flex;gap:11px;align-items:flex-start;padding:7px 0}
+  .item + .item{border-top:2px dotted rgba(22,22,26,.16)}
+  .bullet{width:19px;height:19px;flex-shrink:0;margin-top:3px}
+  .no{font-family:'Caveat',cursive;font-weight:700;font-size:20px;color:#8A8A92;min-width:22px;line-height:1.2;flex-shrink:0}
+  .item.hl .no{color:#D8590A}
+  .txt{flex:1;min-width:0;font-size:17px;color:#22222A}
+  .item.hl .txt mark{
+    background:linear-gradient(180deg,transparent 10%,#FFC183 10%,#FFA451 88%,transparent 88%);
+    color:#16161A;padding:0 .12em;
+  }
+  .tag{
+    display:inline-block;font-family:'Caveat',cursive;font-weight:700;font-size:17px;line-height:1;
+    background:#F5721B;color:#FFFFFF;border:2px solid #16161A;padding:3px 9px 4px;
+    border-radius:225px 12px 255px 12px/12px 255px 12px 225px;
+    transform:rotate(-2.5deg);margin-left:6px;white-space:nowrap;
+  }
+
+  .empty{text-align:center;padding:34px;font-size:18px;color:#6A6A72}
+
+  /* ---------- COVER ---------- */
+  #cover{position:fixed;inset:0;z-index:9999;background:#FCFAF5;display:none;
+    align-items:center;justify-content:center;flex-direction:column;gap:14px}
+  #cover.on{display:flex}
+  #cover .ring{width:36px;height:36px;border:3px solid #E4DFD2;border-top-color:#F5721B;border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #cover .t{font-family:'Caveat',cursive;font-weight:700;font-size:24px;color:#16161A}
+
+  /* ---------- PDF ROOT ---------- */
+  #pdfRoot{width:794px;margin:0;background:#FCFAF5;padding:42px 40px 40px;font-family:'Patrick Hand',cursive}
+  #pdfRoot .sec,#pdfRoot .hero,#pdfRoot .stat{transform:none}
+  #pdfRoot .stamp{
+    font-family:'Caveat',cursive;font-weight:700;font-size:18px;color:#8A8A92;
+    text-align:right;margin-top:14px;
+  }
+  .sec,.item,.hero,.stats{break-inside:avoid;page-break-inside:avoid}
+
+  @media print{
+    @page{size:A4;margin:12mm}
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    .bar,#cover{display:none !important}
+    .page{padding:0;max-width:none}
+  }
+</style>
+</head>
+<body>
+
+<div id="cover"><div class="ring"></div><div class="t">Drawing your PDF…</div></div>
+
+<div class="page" id="app">
+
+  <div class="sketch hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow">Ali &nbsp;·&nbsp; 30-day engagement &nbsp;·&nbsp; MCA / Cross-Sec</div>
+        <h1>What I <span class="swipe">Shipped</span></h1>
+        <div class="tagline">Everything built, fixed and launched — <u>labs, platform, content and deals</u>.</div>
+      </div>
+      <div class="hero-doodle">
+        <svg viewBox="0 0 120 120" fill="none" stroke="#16161A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="14" y="26" width="92" height="62" rx="7" fill="#FFFFFF"/>
+          <path d="M14 40h92"/>
+          <circle cx="24" cy="33" r="2.4" fill="#F5721B" stroke="none"/>
+          <circle cx="33" cy="33" r="2.4" fill="#FFD84D" stroke="none"/>
+          <circle cx="42" cy="33" r="2.4" fill="#16161A" stroke="none"/>
+          <path d="M28 56l10 8-10 8" stroke="#F5721B"/>
+          <path d="M48 72h22" stroke="#F5721B"/>
+          <path d="M8 96h104" />
+          <path d="M46 88l-3 8M74 88l3 8"/>
+          <path d="M86 14c0-4 6-4 6 0s6 4 6 8" stroke="#F5721B"/>
+          <circle cx="99" cy="26" r="2.6" fill="#F5721B" stroke="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="s-total">0</div><div class="l">things shipped</div></div>
+    <div class="stat"><div class="n" id="s-hl">0</div><div class="l">highlights</div></div>
+    <div class="stat"><div class="n" id="s-cat">0</div><div class="l">areas covered</div></div>
+  </div>
+
+  <div class="bar">
+    <button class="tab on" data-f="all">Everything</button>
+    <button class="tab" data-f="hl">Highlights only</button>
+    <div class="grow"></div>
+    <button class="act" id="txtBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Text</button>
+    <button class="act go" id="pdfBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save as PDF</button>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+/* ---------------- DOODLE ICONS ---------------- */
+const S='fill="none" stroke="#16161A" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"';
+const ICON={
+  "LABS":'<svg viewBox="0 0 24 24" '+S+'><path d="M9 3v6.5L4.5 18a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L15 9.5V3"/><path d="M8 3h8"/><path d="M7.5 15h9" stroke="#F5721B"/></svg>',
+  "AI TUTOR":'<svg viewBox="0 0 24 24" '+S+'><rect x="3.5" y="7" width="17" height="12" rx="3"/><path d="M12 7V3.5"/><circle cx="12" cy="2.6" r="1.4" fill="#F5721B" stroke="none"/><circle cx="9" cy="12.5" r="1.3" fill="#16161A" stroke="none"/><circle cx="15" cy="12.5" r="1.3" fill="#16161A" stroke="none"/><path d="M9.5 16h5" stroke="#F5721B"/></svg>',
+  "PLATFORM":'<svg viewBox="0 0 24 24" '+S+'><rect x="2.5" y="4" width="19" height="13" rx="2.5"/><path d="M8 21h8M12 17v4"/><path d="M6.5 9.5l2.5 2-2.5 2" stroke="#F5721B"/><path d="M12.5 13.5h5" stroke="#F5721B"/></svg>',
+  "CONTENT":'<svg viewBox="0 0 24 24" '+S+'><path d="M4 4.5h6a2.5 2.5 0 0 1 2 2.5v13a2 2 0 0 0-2-1.5H4z"/><path d="M20 4.5h-6a2.5 2.5 0 0 0-2 2.5v13a2 2 0 0 1 2-1.5h6z"/><path d="M6 9h3.5M14.5 9H18" stroke="#F5721B"/></svg>',
+  "BRANDING":'<svg viewBox="0 0 24 24" '+S+'><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.8-1.8 0-1.6 1.2-2.2 2.4-2.2H19a3 3 0 0 0 3-3A9 9 0 0 0 12 3z"/><circle cx="7.8" cy="11" r="1.3" fill="#F5721B" stroke="none"/><circle cx="12" cy="7.6" r="1.3" fill="#FFD84D" stroke="none"/><circle cx="16.2" cy="11" r="1.3" fill="#16161A" stroke="none"/></svg>',
+  "CROSS-SEC":'<svg viewBox="0 0 24 24" '+S+'><path d="M12 3l7.5 3v6c0 4.5-3 7.8-7.5 9-4.5-1.2-7.5-4.5-7.5-9V6z"/><path d="M9 12l2.2 2.3L15.5 10" stroke="#F5721B"/></svg>',
+  "DELIVERY":'<svg viewBox="0 0 24 24" '+S+'><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 3v4M16 3v4"/><path d="M8 14l2.2 2.2L15.5 12" stroke="#F5721B"/></svg>',
+  "BIZ-DEV":'<svg viewBox="0 0 24 24" '+S+'><path d="M3 14l4-4 3.5 3 4-5.5L20 12"/><path d="M3 20h18"/><path d="M16.5 7.5H20V11" stroke="#F5721B"/></svg>'
+};
+const FILL={"LABS":"#FFF6D9","AI TUTOR":"#E4EFF9","PLATFORM":"#E6F2E3","CONTENT":"#FBE7EA","BRANDING":"#F0EAF8","CROSS-SEC":"#FFF6D9","DELIVERY":"#E4EFF9","BIZ-DEV":"#E6F2E3"};
+
+/* ---------------- DATA ---------------- */
+const CATS=["LABS","AI TUTOR","PLATFORM","CONTENT","BRANDING","CROSS-SEC","DELIVERY","BIZ-DEV"];
+const HIGHLIGHTS=[1,3,5,6,9,15];
+const SEED=[
+  ["LABS","Host the CRT lab set — 5 labs"],
+  ["LABS","Merged CPSA with CRT into a single portal and pulled the Sec+ labs under an extra tab."],
+  ["LABS","Cracked hosting for AI labs — a blocker nobody had solved — and hosted 7 labs"],
+  ["LABS","Wrote the \"How to Host a Lab on Course Stack\" doc as a team reference."],
+  ["AI TUTOR","AI Tutor \"Red\" into CPSA+CRT and Sec+, wired to courses — 24/7 tutor at zero extra cost."],
+  ["PLATFORM","Built the MCA System / talent portal (website + mobile app / APK)."],
+  ["PLATFORM","Built \"Slave\" — the full course-production pipeline (Produce → Gamma+GitHub → Hosting → CourseStack)."],
+  ["PLATFORM","Added dark/light auto-matching for embedded pages and reworked the PBQ / flashcard UI."],
+  ["PLATFORM","Set up MCA GitHub, uploaded content, and hosted the CREST AI PBQs."],
+  ["PLATFORM","Fixed the coupon-code vulnerability (leaked codes with no usage limit / expiry)"],
+  ["CONTENT","Wrote the AI Security Practitioner (CAISP) syllabus."],
+  ["CONTENT","Built a unified course structure across all courses (descriptors + student & trainer handouts)."],
+  ["CONTENT","Ran QA on Sec AI+ and the rest of the AI content."],
+  ["CONTENT","Produced PBQs, flashcards, slides and reseller-ready lab descriptions/brochures."],
+  ["CONTENT","Producing a full course in (OSCP, OSAI prep, SC-200, CREST AI)."],
+  ["BRANDING","Designed course artwork (Sec AI+, Cyber Fundamentals, MCA AI 101, CREST CPSA/CRT) and the Red fox imagery."],
+  ["BRANDING","Re-branded the AI_LLM brochure into the MCA theme."],
+  ["CROSS-SEC","Some Help for Ivan"],
+  ["DELIVERY","PGI courses in Jordan (+ weekly check-ins), VM/SOC mentoring with David, ASI system mentoring."],
+  ["BIZ-DEV","connections & opportunities: WhiteHackLabs, hakluke, PSD platform interest, and the UAV-Link drone AI-security project."],
+  ["BIZ-DEV","Pitched the AI Tutor concept (built on Bloom's 2 Sigma) for UK gov via the UK AI Council."]
+];
+const OPS=SEED.map((r,i)=>({no:i+1,cat:r[0],text:r[1],hl:HIGHLIGHTS.indexOf(i+1)!==-1}));
+let filter="all";
+
+function esc(s){return (s||"").replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+const TICK='<svg class="bullet" viewBox="0 0 24 24" fill="none" stroke="#16161A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13.5l5 5L20 5.5"/></svg>';
+const TICK_HL='<svg class="bullet" viewBox="0 0 24 24" fill="none" stroke="#D8590A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13.5l5 5L20 5.5"/></svg>';
+
+/* Builds every category section. `showTag` adds the orange sticker (used in the PDF too). */
+function sectionsHTML(ops){
+  let out="";
+  CATS.forEach((cat,i)=>{
+    const items=ops.filter(o=>o.cat===cat);
+    if(!items.length) return;
+    out+='<div class="sketch'+(i%2?' alt':'')+' sec" style="background:'+FILL[cat]+'">'+
+      '<div class="sec-h">'+ICON[cat]+'<h2>'+cat+'</h2><div class="rule"></div><div class="cnt">'+items.length+'</div></div>';
+    items.forEach(o=>{
+      out+='<div class="item'+(o.hl?' hl':'')+'">'+
+        (o.hl?TICK_HL:TICK)+
+        '<div class="no">'+String(o.no).padStart(2,"0")+'</div>'+
+        '<div class="txt">'+(o.hl?'<mark>'+esc(o.text)+'</mark><span class="tag">top</span>':esc(o.text))+'</div>'+
+      '</div>';
+    });
+    out+='</div>';
+  });
+  return out;
+}
+
+/* ---------------- RENDER ---------------- */
+function render(){
+  const shown=OPS.filter(o=> filter==="all" ? true : o.hl);
+  document.getElementById("s-total").textContent=OPS.length;
+  document.getElementById("s-hl").textContent=OPS.filter(o=>o.hl).length;
+  document.getElementById("s-cat").textContent=new Set(OPS.map(o=>o.cat)).size;
+  const list=document.getElementById("list");
+  list.innerHTML = shown.length ? sectionsHTML(shown) : '<div class="empty">Nothing here yet.</div>';
+}
+
+document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("[data-f]").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); filter=b.dataset.f; render();
+});
+
+/* ---------------- TEXT EXPORT ---------------- */
+document.getElementById("txtBtn").onclick=()=>{
+  let out="WHAT I SHIPPED — ALI\n30-day engagement · MCA / Cross-Sec\n"+"=".repeat(48)+"\n\n";
+  CATS.forEach(cat=>{
+    const items=OPS.filter(o=>o.cat===cat); if(!items.length) return;
+    out+="["+cat+"]\n";
+    items.forEach(o=>{ out+=(o.hl?"  ★ ":"  - ")+o.text+"\n"; });
+    out+="\n";
+  });
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([out],{type:"text/plain"}));
+  a.download="what-i-shipped.txt"; a.click();
+};
+
+/* ---------------- PDF EXPORT ---------------- */
+function buildPdfDom(){
+  const root=document.createElement("div");
+  root.id="pdfRoot";
+  const date=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+  root.innerHTML=
+    document.querySelector(".hero").outerHTML.replace('class="sketch hero"','class="sketch hero"')+
+    '<div class="stats">'+
+      '<div class="stat"><div class="n">'+OPS.length+'</div><div class="l">things shipped</div></div>'+
+      '<div class="stat"><div class="n">'+OPS.filter(o=>o.hl).length+'</div><div class="l">highlights</div></div>'+
+      '<div class="stat"><div class="n">'+new Set(OPS.map(o=>o.cat)).size+'</div><div class="l">areas covered</div></div>'+
+    '</div>'+
+    sectionsHTML(OPS)+
+    '<div class="stamp">drawn up '+date+'</div>';
+  return root;
+}
+
+async function exportPDF(){
+  const btn=document.getElementById("pdfBtn");
+  const cover=document.getElementById("cover");
+  const app=document.getElementById("app");
+
+  if(typeof html2pdf==="undefined"){
+    if(confirm("The PDF engine didn't load (no internet?).\n\nUse the browser print dialog instead and choose \"Save as PDF\"?")) window.print();
+    return;
+  }
+
+  btn.disabled=true;
+  cover.classList.add("on");
+
+  const root=buildPdfDom();
+  app.style.display="none";
+  document.body.appendChild(root);
+  window.scrollTo(0,0);
+
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    await new Promise(r=>setTimeout(r,150));
+
+    await html2pdf().set({
+      margin:0,
+      filename:"Ali-What-I-Shipped.pdf",
+      image:{type:"png"},
+      html2canvas:{scale:2,backgroundColor:"#FCFAF5",useCORS:true,logging:false,scrollX:0,scrollY:0},
+      jsPDF:{unit:"pt",format:"a4",orientation:"portrait"},
+      pagebreak:{mode:["css","legacy"],avoid:[".sec",".item",".hero",".stats"]}
+    }).from(root).save();
+  }catch(err){
+    console.error(err);
+    if(confirm("PDF export failed.\n\nOpen the browser print dialog instead (choose \"Save as PDF\")?")) window.print();
+  }finally{
+    root.remove();
+    app.style.display="";
+    cover.classList.remove("on");
+    btn.disabled=false;
+  }
+}
+document.getElementById("pdfBtn").onclick=exportPDF;
+
+render();
+</script>
+</body>
+</html>
